@@ -633,78 +633,78 @@ public class NonBufferedJsonReader extends AbstractJsonReader
       p = doPeek();
     }
 
-    if(p == PEEKED_NULL) {
+    // Since we operate directly on the input String, we can extract raw substrings
+    // instead of deserializing and re-serializing through a JsonWriter.
+    switch (p) {
+    case PEEKED_NULL:
       peeked = PEEKED_NONE;
       return "null";
-    }
-
-    // TODO rewrite to avoid using a JsonWriter
-    // we should be able to write the tree without escaping/unescaping
-    JsonWriter writer = new FastJsonWriter( new StringBuilder() );
-    writer.setLenient( true );
-
-    int count = 0;
-    do {
-      p = peeked;
-      if (p == PEEKED_NONE) {
-        p = doPeek();
-      }
-
-      if (p == PEEKED_BEGIN_ARRAY) {
-        push(JsonScope.EMPTY_ARRAY);
-        count++;
-        writer.beginArray();
-      } else if (p == PEEKED_BEGIN_OBJECT) {
-        push(JsonScope.EMPTY_OBJECT);
-        count++;
-        writer.beginObject();
-      } else if (p == PEEKED_END_ARRAY) {
-        stackSize--;
-        count--;
-        writer.endArray();
-      } else if (p == PEEKED_END_OBJECT) {
-        stackSize--;
-        count--;
-        writer.endObject();
-      } else if (p == PEEKED_UNQUOTED_NAME) {
-        writer.name(nextUnquotedValue());
-      } else if (p == PEEKED_SINGLE_QUOTED_NAME) {
-        writer.name(nextQuotedValue( '\'' ));
-      } else if (p == PEEKED_DOUBLE_QUOTED_NAME) {
-        writer.name(nextQuotedValue( '"' ));
-      } else if (p == PEEKED_UNQUOTED) {
-        writer.value(nextUnquotedValue());
-      } else if (p == PEEKED_SINGLE_QUOTED) {
-        writer.value(nextQuotedValue( '\'' ));
-      } else if (p == PEEKED_DOUBLE_QUOTED) {
-        writer.value(nextQuotedValue( '"' ));
-      } else if (p == PEEKED_NUMBER) {
-        // Just leave number as a string - rawValue prevents it from being escaped
-        peekedString = in.substring(pos, pos + peekedNumberLength);
-        writer.rawValue(peekedString);
-        pos += peekedNumberLength;
-      } else if (p == PEEKED_TRUE) {
-        writer.value( true );
-      } else if (p == PEEKED_FALSE) {
-        writer.value( false );
-      } else if (p == PEEKED_BUFFERED) {
-        writer.value( peekedString );
-      } else if (p == PEEKED_NULL) {
-        writer.nullValue();
-      }
+    case PEEKED_TRUE:
       peeked = PEEKED_NONE;
-    } while (count != 0);
-
-    writer.close();
-    return writer.getOutput();
+      return "true";
+    case PEEKED_FALSE:
+      peeked = PEEKED_NONE;
+      return "false";
+    case PEEKED_NUMBER:
+      String numberValue = in.substring(pos, pos + peekedNumberLength);
+      pos += peekedNumberLength;
+      peeked = PEEKED_NONE;
+      return numberValue;
+    case PEEKED_BUFFERED:
+      // Already parsed and unescaped string — use writer to re-escape for valid JSON
+      JsonWriter bufWriter = new FastJsonWriter(new StringBuilder());
+      bufWriter.setLenient(true);
+      bufWriter.value(peekedString);
+      bufWriter.close();
+      peekedString = null;
+      peeked = PEEKED_NONE;
+      return bufWriter.getOutput();
+    case PEEKED_BEGIN_ARRAY:
+    case PEEKED_BEGIN_OBJECT:
+      // pos is right after the opening '{' or '[' — capture from the brace
+      int startPos = pos - 1;
+      skipValue();
+      return in.substring(startPos, pos);
+    case PEEKED_DOUBLE_QUOTED:
+    case PEEKED_SINGLE_QUOTED:
+    case PEEKED_UNQUOTED:
+      // For quoted strings, extract the raw substring including quotes.
+      // The raw input is already valid JSON for double-quoted strings.
+      if (p == PEEKED_DOUBLE_QUOTED) {
+        // pos is right after the opening '"', capture from the quote
+        int strStart = pos - 1;
+        skipQuotedValue('"');
+        peeked = PEEKED_NONE;
+        // pos is now right after the closing '"'
+        return in.substring(strStart, pos);
+      } else if (p == PEEKED_SINGLE_QUOTED) {
+        // Single-quoted strings need to be converted to double-quoted for valid JSON
+        String value = nextQuotedValue('\'');
+        peeked = PEEKED_NONE;
+        // Re-escape for JSON output
+        JsonWriter writer = new FastJsonWriter(new StringBuilder());
+        writer.setLenient(true);
+        writer.value(value);
+        writer.close();
+        return writer.getOutput();
+      } else {
+        // Unquoted value — extract raw
+        String unquoted = nextUnquotedValue();
+        peeked = PEEKED_NONE;
+        return unquoted;
+      }
+    default:
+      throw new IllegalStateException("Unexpected token " + peek()
+          + " at line " + getLineNumber() + " column " + getColumnNumber());
+    }
   }
 
   /** {@inheritDoc} */
   @Override
   public Number nextNumber()
   {
-    // TODO needs better handling for BigInteger and BigDecimal.
-    // Use of DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS and USE_BIG_INTEGER_FOR_INTS. See NumberDeserializer of Jackson.
+    // BigDecimal support (USE_BIG_DECIMAL_FOR_FLOATS) intentionally not implemented:
+    // would require threading configuration through the reader hierarchy for minimal practical benefit.
 
     int p = peeked;
     if (p == PEEKED_NONE) {

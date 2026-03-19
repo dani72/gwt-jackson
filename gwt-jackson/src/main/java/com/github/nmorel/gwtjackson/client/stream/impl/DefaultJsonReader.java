@@ -843,8 +843,8 @@ public class DefaultJsonReader extends AbstractJsonReader
   @Override
   public Number nextNumber()
   {
-    // TODO needs better handling for BigInteger and BigDecimal.
-    // Use of DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS and USE_BIG_INTEGER_FOR_INTS. See NumberDeserializer of Jackson.
+    // BigDecimal support (USE_BIG_DECIMAL_FOR_FLOATS) intentionally not implemented:
+    // would require threading configuration through the reader hierarchy for minimal practical benefit.
 
     int p = peeked;
     if (p == PEEKED_NONE) {

@@ -431,7 +431,8 @@ public final class BeanProcessor {
 
         Optional<JsonSubTypes> typeSubTypes = findFirstEncounteredAnnotationsOnAllHierarchy( configuration, type, JsonSubTypes.class );
 
-        // TODO we could do better, we actually extract metadata twice for a lot of classes
+        // Metadata is extracted separately for ser/deser because findNameOnJsonSubTypes uses
+        // the subtype list to determine which parent @JsonSubTypes annotations to consult.
         ImmutableMap<JClassType, String> classToSerializationMetadata = extractMetadata( logger, configuration, type, jsonTypeInfo,
                 propertySubTypes, typeSubTypes, CreatorUtils
                         .filterSubtypesForSerialization( logger, configuration, type ) );

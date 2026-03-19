@@ -149,22 +149,23 @@ public abstract class BaseDateKeyDeserializer<D extends Date> extends KeyDeseria
     /** {@inheritDoc} */
     @Override
     protected D doDeserialize( String key, JsonDeserializationContext ctx ) {
-        // TODO could probably find a better way to handle the parsing without try/catch
+        // Check if it looks like a numeric timestamp (millis) before trying date formats
+        if ( key.length() > 0 ) {
+            char first = key.charAt( 0 );
+            if ( first == '-' || (first >= '0' && first <= '9') ) {
+                try {
+                    return deserializeMillis( Long.parseLong( key ) );
+                } catch ( NumberFormatException e ) {
+                    // not a pure number, fall through to date formats
+                }
+            }
+        }
 
         // Default configuration for serializing keys is using ISO-8601, we try that one first
-
-        // in ISO-8601
         try {
             return deserializeDate( ISO_8601_FORMAT.parse( key ) );
         } catch ( IllegalArgumentException e ) {
             // can happen if it's not the correct format
-        }
-
-        // maybe it's in milliseconds
-        try {
-            return deserializeMillis( Long.parseLong( key ) );
-        } catch ( NumberFormatException e ) {
-            // can happen if the key is string-based like an ISO-8601 format
         }
 
         // or in RFC-2822
