@@ -23,10 +23,12 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
-import org.junit.After;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ObjectifyJacksonModuleTest extends AbstractJacksonTest {
 
@@ -34,9 +36,7 @@ public class ObjectifyJacksonModuleTest extends AbstractJacksonTest {
 
     private Closeable closeable;
 
-    @Rule
-    public final ExpectedException expectedEx = ExpectedException.none();
-
+    @BeforeEach
     @Override
     public void setUp() {
         super.setUp();
@@ -70,9 +70,9 @@ public class ObjectifyJacksonModuleTest extends AbstractJacksonTest {
 
     @Test
     public void testRefException() throws Exception {
-        expectedEx.expect( JsonMappingException.class );
-        expectedEx.expectMessage( "No content to map due to end-of-input" );
-        objectMapper.readValue( "", Ref.class );
+        JsonMappingException ex = assertThrows( JsonMappingException.class,
+                () -> objectMapper.readValue( "", Ref.class ) );
+        assertTrue( ex.getMessage().contains( "No content to map due to end-of-input" ) );
     }
 
     @Test
@@ -141,7 +141,7 @@ public class ObjectifyJacksonModuleTest extends AbstractJacksonTest {
         RefKeyTester.INSTANCE.testDeserializeNonNull( createReader( typeReference ) );
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws IOException {
         closeable.close();
         helper.tearDown();

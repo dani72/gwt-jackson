@@ -19,7 +19,7 @@ package com.github.nmorel.gwtjackson.jackson.mapper;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.mapper.AutoDetectionTester;
 import com.github.nmorel.gwtjackson.shared.mapper.AutoDetectionTester.AutoDetectionBeanBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

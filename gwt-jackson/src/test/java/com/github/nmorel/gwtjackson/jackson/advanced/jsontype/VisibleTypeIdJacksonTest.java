@@ -28,7 +28,7 @@ import com.github.nmorel.gwtjackson.shared.advanced.jsontype.VisibleTypeIdTester
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.VisibleTypeIdTester.TypeIdFromMethodObject;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.VisibleTypeIdTester.WrapperArrayBean;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.VisibleTypeIdTester.WrapperObjectBean;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

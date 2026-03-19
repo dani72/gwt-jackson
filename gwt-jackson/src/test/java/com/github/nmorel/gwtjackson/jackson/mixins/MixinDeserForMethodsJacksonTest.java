@@ -20,7 +20,7 @@ import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForMethodsTester;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForMethodsTester.BaseClass;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForMethodsTester.MixIn;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

@@ -22,7 +22,7 @@ import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForCreatorsDelegatio
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForCreatorsDelegationTester.MixInForPrivate;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForCreatorsDelegationTester.StringWrapper;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForCreatorsDelegationTester.StringWrapperMixIn;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

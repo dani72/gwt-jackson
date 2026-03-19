@@ -23,13 +23,15 @@ import com.github.nmorel.gwtjackson.shared.annotations.JsonRootNameTester;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonRootNameTester.Bean;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonRootNameTester.RootBeanWithEmpty;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonRootNameTester.RootBeanWithNoAnnotation;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel
  */
 public class JsonRootNameJacksonTest extends AbstractJacksonTest {
 
+    @BeforeEach
     @Override
     public void setUp() {
         super.setUp();

@@ -87,7 +87,7 @@
     <jackson-annotations.version>2.21</jackson-annotations.version>
     <jackson-databind.version>2.21.1</jackson-databind.version>
     <javapoet.version>1.13.0</javapoet.version>
-    <junit.version>4.13.2</junit.version>
+    <junit-jupiter.version>6.0.2</junit-jupiter.version>
   </properties>
 
   <dependencyManagement>
@@ -133,10 +133,11 @@
 
       <!-- Test dependencies -->
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -21,7 +21,7 @@ import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForClassTester;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForClassTester.BaseClass;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForClassTester.LeafClass;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForClassTester.MixIn;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

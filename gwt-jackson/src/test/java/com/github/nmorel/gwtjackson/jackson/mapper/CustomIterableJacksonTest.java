@@ -20,7 +20,7 @@ import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.mapper.CustomIterableTester;
 import com.github.nmorel.gwtjackson.shared.mapper.CustomIterableTester.MyIntegerIterable;
 import com.github.nmorel.gwtjackson.shared.mapper.CustomIterableTester.Wrapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

@@ -19,7 +19,8 @@ package com.github.nmorel.gwtjackson.jackson.advanced.identity;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.advanced.identity.ObjectIdWithEqualsTester;
 import com.github.nmorel.gwtjackson.shared.advanced.identity.ObjectIdWithEqualsTester.Foo;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel
@@ -28,6 +29,7 @@ public class ObjectIdWithEqualsJacksonTest extends AbstractJacksonTest {
 
     private ObjectIdWithEqualsTester tester = ObjectIdWithEqualsTester.INSTANCE;
 
+    @BeforeEach
     @Override
     public void setUp() {
         super.setUp();

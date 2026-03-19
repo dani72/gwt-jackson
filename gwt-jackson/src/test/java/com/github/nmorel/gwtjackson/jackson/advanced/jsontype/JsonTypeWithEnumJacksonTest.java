@@ -23,7 +23,7 @@ import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeWithEnumTester;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeWithEnumTester.HasCode;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeWithEnumTester.HasCodeWrapperBean;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

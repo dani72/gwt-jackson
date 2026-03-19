@@ -23,7 +23,7 @@ import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForClassTester.LeafCla
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForClassTester.LeafClassToMixin;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForClassTester.MixIn;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForClassTester.MixInAutoDetect;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

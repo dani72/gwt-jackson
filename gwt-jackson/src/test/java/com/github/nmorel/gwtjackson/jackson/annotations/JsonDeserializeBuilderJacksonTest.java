@@ -19,7 +19,7 @@ package com.github.nmorel.gwtjackson.jackson.annotations;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonDeserializeBuilderTester;
 import com.github.nmorel.gwtjackson.shared.model.Animal;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

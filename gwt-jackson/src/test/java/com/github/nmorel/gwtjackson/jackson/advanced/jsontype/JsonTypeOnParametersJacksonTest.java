@@ -20,7 +20,7 @@ import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeOnParametersTester;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeOnParametersTester.FieldWrapperBean;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeOnParametersTester.FieldWrapperBeanList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

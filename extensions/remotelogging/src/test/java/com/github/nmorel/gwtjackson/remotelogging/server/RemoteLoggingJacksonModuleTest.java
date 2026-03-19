@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.remotelogging.shared.RemoteThrowable;
 import com.github.nmorel.gwtjackson.remotelogging.shared.ThrowableTester;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class RemoteLoggingJacksonModuleTest extends AbstractJacksonTest {
 
-    @Before
+    @BeforeEach
     public void setUp() {
         super.setUp();
         objectMapper.registerModule( new RemoteLoggingJacksonModule() );

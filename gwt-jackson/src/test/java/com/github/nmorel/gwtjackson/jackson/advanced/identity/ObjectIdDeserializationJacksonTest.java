@@ -26,7 +26,7 @@ import com.github.nmorel.gwtjackson.shared.advanced.identity.ObjectIdDeserializa
 import com.github.nmorel.gwtjackson.shared.advanced.identity.ObjectIdDeserializationTester.IdentifiableCustom;
 import com.github.nmorel.gwtjackson.shared.advanced.identity.ObjectIdDeserializationTester.ListFinalPropertyId;
 import com.github.nmorel.gwtjackson.shared.advanced.identity.ObjectIdDeserializationTester.UUIDNode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

@@ -19,7 +19,7 @@ package com.github.nmorel.gwtjackson.jackson.advanced.identity;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.advanced.identity.ObjectIdBackReferenceTester;
 import com.github.nmorel.gwtjackson.shared.advanced.identity.ObjectIdBackReferenceTester.Owner;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

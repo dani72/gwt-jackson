@@ -21,7 +21,7 @@ import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.options.WriteEmptyJsonArraysOptionTester;
 import com.github.nmorel.gwtjackson.shared.options.WriteEmptyJsonArraysOptionTester.EmptyArrayBean;
 import com.github.nmorel.gwtjackson.shared.options.WriteEmptyJsonArraysOptionTester.EmptyListBean;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

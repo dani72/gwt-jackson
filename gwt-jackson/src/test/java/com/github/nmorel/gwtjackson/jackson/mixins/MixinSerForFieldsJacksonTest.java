@@ -24,7 +24,7 @@ import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForFieldsTester.BaseCl
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForFieldsTester.MixIn;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForFieldsTester.MixIn2;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForFieldsTester.SubClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

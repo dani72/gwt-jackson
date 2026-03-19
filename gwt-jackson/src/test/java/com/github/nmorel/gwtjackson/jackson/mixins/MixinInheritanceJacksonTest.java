@@ -22,7 +22,7 @@ import com.github.nmorel.gwtjackson.shared.mixins.MixinInheritanceTester.Beano;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinInheritanceTester.Beano2;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinInheritanceTester.BeanoMixinSub;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinInheritanceTester.BeanoMixinSub2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

@@ -18,7 +18,7 @@ package com.github.nmorel.gwtjackson.jackson.options;
 
 import java.util.TimeZone;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;

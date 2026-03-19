@@ -21,7 +21,7 @@ import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonRawValueTester;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonRawValueTester.ClassGetter;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonRawValueTester.ClassWithJsonAsString;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

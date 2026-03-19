@@ -26,7 +26,7 @@ import com.github.nmorel.gwtjackson.shared.annotations.JsonIncludeTester.MixInIn
 import com.github.nmorel.gwtjackson.shared.annotations.JsonIncludeTester.MixInIncludeNonEmpty;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonIncludeTester.MixInIncludeNonNull;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonIncludeTester.MixInIncludeUseDefaults;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

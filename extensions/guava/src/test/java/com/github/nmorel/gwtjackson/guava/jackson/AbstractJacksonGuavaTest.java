@@ -18,12 +18,14 @@ package com.github.nmorel.gwtjackson.guava.jackson;
 
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Nicolas Morel
  */
 public abstract class AbstractJacksonGuavaTest extends AbstractJacksonTest {
 
+    @BeforeEach
     @Override
     public void setUp() {
         super.setUp();

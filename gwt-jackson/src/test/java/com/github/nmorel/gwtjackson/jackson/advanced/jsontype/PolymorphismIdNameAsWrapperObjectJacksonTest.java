@@ -18,8 +18,8 @@ package com.github.nmorel.gwtjackson.jackson.advanced.jsontype;
 
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.PolymorphismIdNameAsWrapperObjectTester;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel
@@ -33,7 +33,7 @@ public class PolymorphismIdNameAsWrapperObjectJacksonTest extends AbstractJackso
     }
 
     @Test
-    @Ignore("jackson can't event find the subtype, booooo")
+    @Disabled("jackson can't event find the subtype, booooo")
     public void testDeserialize() {
         PolymorphismIdNameAsWrapperObjectTester.INSTANCE
                 .testDeserialize( createReader( PolymorphismIdNameAsWrapperObjectTester.Person[].class ) );

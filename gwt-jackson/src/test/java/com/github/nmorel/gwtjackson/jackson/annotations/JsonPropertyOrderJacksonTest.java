@@ -18,8 +18,8 @@ package com.github.nmorel.gwtjackson.jackson.annotations;
 
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.annotations.JsonPropertyOrderTester;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel
@@ -27,7 +27,7 @@ import org.junit.Test;
 public class JsonPropertyOrderJacksonTest extends AbstractJacksonTest {
 
     @Test
-    @Ignore("jackson has a different natural order")
+    @Disabled("jackson has a different natural order")
     public void testSerializeBeanWithPropertiesNotOrdered() {
         JsonPropertyOrderTester.INSTANCE
                 .testSerializeBeanWithPropertiesNotOrdered( createWriter( JsonPropertyOrderTester.BeanWithPropertiesNotOrdered.class ) );
@@ -59,7 +59,7 @@ public class JsonPropertyOrderJacksonTest extends AbstractJacksonTest {
     }
 
     @Test
-    @Ignore("jackson doesn't support it yet")
+    @Disabled("jackson doesn't support it yet")
     public void testDeserializeBeanWithMissingRequiredProperties() {
         JsonPropertyOrderTester.INSTANCE
                 .testDeserializeBeanWithMissingRequiredProperties( createReader( JsonPropertyOrderTester.BeanWithPropertiesNotOrdered

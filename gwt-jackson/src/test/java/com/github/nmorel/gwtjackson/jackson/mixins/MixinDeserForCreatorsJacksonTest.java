@@ -22,7 +22,7 @@ import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForCreatorsTester.Ba
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForCreatorsTester.BaseClass2;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForCreatorsTester.MixInFactory;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinDeserForCreatorsTester.MixInIgnore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

@@ -26,7 +26,7 @@ import com.github.nmorel.gwtjackson.client.exception.JsonSerializationException;
 import com.github.nmorel.gwtjackson.shared.ObjectMapperTester;
 import com.github.nmorel.gwtjackson.shared.ObjectReaderTester;
 import com.github.nmorel.gwtjackson.shared.ObjectWriterTester;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Nicolas Morel
@@ -35,7 +35,7 @@ public abstract class AbstractJacksonTest {
 
     protected ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         objectMapper = new ObjectMapper();
     }

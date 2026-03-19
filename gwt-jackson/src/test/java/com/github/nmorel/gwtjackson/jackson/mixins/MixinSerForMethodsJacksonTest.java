@@ -30,7 +30,7 @@ import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForMethodsTester.MixIn
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForMethodsTester.MixInForSimple;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForMethodsTester.ObjectMixIn;
 import com.github.nmorel.gwtjackson.shared.mixins.MixinSerForMethodsTester.SimpleBean;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

@@ -19,7 +19,7 @@ package com.github.nmorel.gwtjackson.jackson.advanced;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.advanced.DeserializeAsTester;
 import com.github.nmorel.gwtjackson.shared.advanced.DeserializeAsTester.DeserializeAsWrapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

@@ -22,8 +22,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.nmorel.gwtjackson.jackson.AbstractJacksonTest;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.TypeNamesTester;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.TypeNamesTester.Animal;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel
@@ -41,7 +41,7 @@ public class TypeNamesJacksonTest extends AbstractJacksonTest {
     }
 
     @Test
-    @Ignore("for some reasons, jackson don't add type info. It works on original jackson test with a class extending LinkedHashMap")
+    @Disabled("for some reasons, jackson don't add type info. It works on original jackson test with a class extending LinkedHashMap")
     public void testRoundTripMap() {
         TypeNamesTester.INSTANCE.testRoundTripMap( createMapper( new TypeReference<LinkedHashMap<String, Animal>>() {} ) );
     }

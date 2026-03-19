@@ -22,8 +22,8 @@ import com.github.nmorel.gwtjackson.guava.shared.OptionalTester;
 import com.github.nmorel.gwtjackson.guava.shared.OptionalTester.BeanWithOptional;
 import com.github.nmorel.gwtjackson.guava.shared.OptionalTester.OptionalGenericData;
 import com.google.common.base.Optional;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel
@@ -36,7 +36,7 @@ public class OptionalJacksonTest extends AbstractJacksonGuavaTest {
     }
 
     @Test
-    @Ignore("jackson does not force the null value")
+    @Disabled("jackson does not force the null value")
     public void testSerializeWithNonNullSerialization() {
         objectMapper.setSerializationInclusion( JsonInclude.Include.NON_NULL );
         OptionalTester.INSTANCE.testSerializeWithNonNullSerialization( createWriter( BeanWithOptional.class ) );

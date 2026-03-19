@@ -19,7 +19,7 @@ package com.github.nmorel.gwtjackson.guava.jackson;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.nmorel.gwtjackson.guava.shared.FluentIterableTester;
 import com.google.common.collect.FluentIterable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

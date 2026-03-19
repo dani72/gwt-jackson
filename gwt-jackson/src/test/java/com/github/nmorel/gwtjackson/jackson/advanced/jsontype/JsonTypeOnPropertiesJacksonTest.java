@@ -26,7 +26,7 @@ import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeOnPropertie
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeOnPropertiesTester.MethodWrapperBeanArray;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeOnPropertiesTester.MethodWrapperBeanList;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeOnPropertiesTester.MethodWrapperBeanMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

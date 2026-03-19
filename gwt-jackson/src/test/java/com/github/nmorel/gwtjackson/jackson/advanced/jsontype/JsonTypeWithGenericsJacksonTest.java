@@ -22,7 +22,7 @@ import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeWithGeneric
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeWithGenericsTester.Animal;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeWithGenericsTester.ContainerWithField;
 import com.github.nmorel.gwtjackson.shared.advanced.jsontype.JsonTypeWithGenericsTester.ContainerWithGetter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel

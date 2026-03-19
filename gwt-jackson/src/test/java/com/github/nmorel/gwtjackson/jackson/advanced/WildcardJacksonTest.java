@@ -24,7 +24,7 @@ import com.github.nmorel.gwtjackson.shared.advanced.WildcardTester.AnimalWildcar
 import com.github.nmorel.gwtjackson.shared.advanced.WildcardTester.BeanWithCustomEnumMap;
 import com.github.nmorel.gwtjackson.shared.advanced.WildcardTester.GenericWildcard;
 import com.github.nmorel.gwtjackson.shared.advanced.WildcardTester.SimpleWildcard;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nicolas Morel
