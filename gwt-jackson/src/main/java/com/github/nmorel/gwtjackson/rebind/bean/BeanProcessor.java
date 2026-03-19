@@ -53,6 +53,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JAbstractMethod;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JConstructor;
+import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
@@ -240,6 +241,43 @@ public final class BeanProcessor {
                         creatorFactory = method;
                         creators = methods;
                         break;
+                    }
+                }
+            }
+        }
+
+        // Auto-detect record canonical constructor
+        if ( null == creatorConstructor && null == creatorFactory && typeOracle.isRecord( beanType ) ) {
+            builder.setRecord( true );
+
+            // Collect non-static fields (= record components) in declaration order
+            List<JField> components = new ArrayList<JField>();
+            for ( JField field : beanType.getFields() ) {
+                if ( !field.isStatic() ) {
+                    components.add( field );
+                }
+            }
+
+            // Find the canonical constructor (parameters match all components in order)
+            for ( JConstructor constructor : beanType.getConstructors() ) {
+                if ( constructor.getParameters().length == components.size() ) {
+                    boolean matches = true;
+                    for ( int i = 0; i < components.size(); i++ ) {
+                        if ( !constructor.getParameters()[i].getType().getQualifiedSourceName()
+                                .equals( components.get( i ).getType().getQualifiedSourceName() ) ) {
+                            matches = false;
+                            break;
+                        }
+                    }
+                    if ( matches ) {
+                        ImmutableMap.Builder<String, JParameter> params = ImmutableMap.builder();
+                        for ( int i = 0; i < components.size(); i++ ) {
+                            params.put( components.get( i ).getName(), constructor.getParameters()[i] );
+                        }
+                        builder.setCreatorParameters( params.build() );
+                        builder.setCreatorMethod( Optional.<JAbstractMethod>of( constructor ) );
+                        builder.setCreatorDefaultConstructor( false );
+                        return;
                     }
                 }
             }

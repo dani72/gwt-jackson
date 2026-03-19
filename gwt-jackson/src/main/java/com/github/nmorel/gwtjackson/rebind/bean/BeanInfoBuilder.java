@@ -49,6 +49,8 @@ final class BeanInfoBuilder {
 
     private boolean creatorDelegation;
 
+    private boolean record;
+
     private Optional<BeanTypeInfo> typeInfo = Optional.absent();
 
     private Optional<PropertyInfo> valuePropertyInfo = Optional.absent();
@@ -90,6 +92,7 @@ final class BeanInfoBuilder {
         this.creatorParameters = beanInfo.getCreatorParameters();
         this.creatorDefaultConstructor = beanInfo.isCreatorDefaultConstructor();
         this.creatorDelegation = beanInfo.isCreatorDelegation();
+        this.record = beanInfo.isRecord();
         this.typeInfo = beanInfo.getTypeInfo();
         this.valuePropertyInfo = beanInfo.getValuePropertyInfo();
         this.anyGetterPropertyInfo = beanInfo.getAnyGetterPropertyInfo();
@@ -144,6 +147,14 @@ final class BeanInfoBuilder {
 
     void setCreatorDelegation( boolean creatorDelegation ) {
         this.creatorDelegation = creatorDelegation;
+    }
+
+    boolean isRecord() {
+        return record;
+    }
+
+    void setRecord( boolean record ) {
+        this.record = record;
     }
 
     void setTypeInfo( Optional<BeanTypeInfo> typeInfo ) {
@@ -216,7 +227,7 @@ final class BeanInfoBuilder {
 
     BeanInfo build() {
         return new BeanInfo( type, parameterizedTypes, builder, creatorMethod, creatorParameters, creatorDefaultConstructor,
-                creatorDelegation, typeInfo, valuePropertyInfo, anyGetterPropertyInfo, anySetterPropertyInfo, ignoredFields,
+                creatorDelegation, record, typeInfo, valuePropertyInfo, anyGetterPropertyInfo, anySetterPropertyInfo, ignoredFields,
                 fieldVisibility, getterVisibility, isGetterVisibility, setterVisibility, creatorVisibility, ignoreUnknown,
                 propertyOrderList, propertyOrderAlphabetic, identityInfo, include );
     }

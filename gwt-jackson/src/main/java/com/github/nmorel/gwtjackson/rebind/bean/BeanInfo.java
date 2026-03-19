@@ -55,6 +55,8 @@ public final class BeanInfo {
 
     private final boolean creatorDelegation;
 
+    private final boolean record;
+
     private final Optional<BeanTypeInfo> typeInfo;
 
     private final Optional<PropertyInfo> valuePropertyInfo;
@@ -89,7 +91,7 @@ public final class BeanInfo {
     /*#### Inclusion info ####*/
     private final Optional<Include> include;
 
-    BeanInfo( JClassType type, List<JClassType> parameterizedTypes, Optional<JClassType> builder, Optional<JAbstractMethod> creatorMethod, Map<String, JParameter> creatorParameters, boolean creatorDefaultConstructor, boolean creatorDelegation, Optional<BeanTypeInfo> typeInfo, Optional<PropertyInfo> valuePropertyInfo, Optional<PropertyInfo> anyGetterPropertyInfo, Optional<PropertyInfo> anySetterPropertyInfo, Set<String> ignoredFields, Visibility fieldVisibility, Visibility getterVisibility, Visibility isGetterVisibility, Visibility setterVisibility, Visibility creatorVisibility, boolean ignoreUnknown, List<String> propertyOrderList, boolean propertyOrderAlphabetic, Optional<BeanIdentityInfo> identityInfo, Optional<Include> include ) {
+    BeanInfo( JClassType type, List<JClassType> parameterizedTypes, Optional<JClassType> builder, Optional<JAbstractMethod> creatorMethod, Map<String, JParameter> creatorParameters, boolean creatorDefaultConstructor, boolean creatorDelegation, boolean record, Optional<BeanTypeInfo> typeInfo, Optional<PropertyInfo> valuePropertyInfo, Optional<PropertyInfo> anyGetterPropertyInfo, Optional<PropertyInfo> anySetterPropertyInfo, Set<String> ignoredFields, Visibility fieldVisibility, Visibility getterVisibility, Visibility isGetterVisibility, Visibility setterVisibility, Visibility creatorVisibility, boolean ignoreUnknown, List<String> propertyOrderList, boolean propertyOrderAlphabetic, Optional<BeanIdentityInfo> identityInfo, Optional<Include> include ) {
 
         this.type = type;
         this.parameterizedTypes = ImmutableList.copyOf( parameterizedTypes );
@@ -99,6 +101,7 @@ public final class BeanInfo {
         this.creatorParameters = ImmutableMap.copyOf( creatorParameters );
         this.creatorDefaultConstructor = creatorDefaultConstructor;
         this.creatorDelegation = creatorDelegation;
+        this.record = record;
         this.typeInfo = typeInfo;
         this.valuePropertyInfo = valuePropertyInfo;
         this.anyGetterPropertyInfo = anyGetterPropertyInfo;
@@ -179,6 +182,15 @@ public final class BeanInfo {
      */
     public boolean isCreatorDelegation() {
         return creatorDelegation;
+    }
+
+    /**
+     * <p>isRecord</p>
+     *
+     * @return a boolean.
+     */
+    public boolean isRecord() {
+        return record;
     }
 
     /**

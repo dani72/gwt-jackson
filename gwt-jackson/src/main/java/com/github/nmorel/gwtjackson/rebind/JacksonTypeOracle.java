@@ -73,6 +73,8 @@ public class JacksonTypeOracle {
 
     private final JClassType stringType;
 
+    private final JClassType recordType;
+
     private final Map<JClassType, BeanJsonMapperInfo> typeToMapperInfo = new HashMap<JClassType, BeanJsonMapperInfo>();
 
     /**
@@ -96,6 +98,7 @@ public class JacksonTypeOracle {
         this.jsoType = typeOracle.findType( JavaScriptObject.class.getCanonicalName() );
         this.enumType = typeOracle.findType( Enum.class.getCanonicalName() );
         this.stringType = typeOracle.findType( String.class.getCanonicalName() );
+        this.recordType = typeOracle.findType( "java.lang.Record" );
     }
 
     /**
@@ -239,6 +242,18 @@ public class JacksonTypeOracle {
      */
     public boolean isEnumSupertype( JType type ) {
         return Enum.class.getName().equals( type.getQualifiedSourceName() );
+    }
+
+    /**
+     * <p>isRecord</p>
+     *
+     * @param type a {@link com.google.gwt.core.ext.typeinfo.JClassType} object.
+     * @return a boolean.
+     */
+    public boolean isRecord( JClassType type ) {
+        return recordType != null
+                && type.getSuperclass() != null
+                && type.getSuperclass().getQualifiedSourceName().equals( "java.lang.Record" );
     }
 
     /**

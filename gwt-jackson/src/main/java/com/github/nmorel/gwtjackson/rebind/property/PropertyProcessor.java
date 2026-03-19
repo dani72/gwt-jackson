@@ -308,8 +308,16 @@ public final class PropertyProcessor {
             }
 
         } else {
-            // no annotation on method and the method does not follow naming convention
-            return false;
+            // For records, treat component accessor methods as getters.
+            // Only match methods corresponding to a known record component to avoid
+            // exposing hashCode(), toString(), etc.
+            if ( !info.isRecord() || !info.getCreatorParameters().containsKey( propertyAccessors.getPropertyName() ) ) {
+                return false;
+            }
+            visibility = info.getGetterVisibility();
+            if ( Visibility.DEFAULT == visibility ) {
+                visibility = configuration.getDefaultGetterVisibility();
+            }
         }
         return isAutoDetected( visibility, getter.isPrivate(), getter.isProtected(), getter.isPublic(), getter.isDefaultAccess() );
     }
