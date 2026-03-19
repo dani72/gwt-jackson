@@ -10,6 +10,8 @@ public final class ThrowableTester extends AbstractTester {
 
     public static final ThrowableTester INSTANCE = new ThrowableTester();
 
+    // Base JSON without Java 9+ StackTraceElement fields (classLoaderName, moduleName, moduleVersion)
+    // GWT client uses this format; Jackson on Java 17 adds the extra fields.
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_JSON = "" +
             "{" +
             "\"message\":\"Var cannot be null.\"," +
@@ -106,7 +108,7 @@ public final class ThrowableTester extends AbstractTester {
     }
 
     public void testSerializeIllegalArgumentException( ObjectWriterTester<RemoteThrowable> writer ) {
-        assertEquals( ILLEGAL_ARGUMENT_EXCEPTION_JSON, writer.write( new RemoteThrowable( ILLEGAL_ARGUMENT_EXCEPTION ) ) );
+        assertEquals( ILLEGAL_ARGUMENT_EXCEPTION_JSON, stripModuleFields( writer.write( new RemoteThrowable( ILLEGAL_ARGUMENT_EXCEPTION ) ) ) );
     }
 
     @GwtIncompatible
@@ -120,7 +122,7 @@ public final class ThrowableTester extends AbstractTester {
     }
 
     public void testSerializeCustomException( ObjectWriterTester<RemoteThrowable> writer ) {
-        assertEquals( CUSTOM_EXCEPTION_JSON, writer.write( new RemoteThrowable( CUSTOM_EXCEPTION ) ) );
+        assertEquals( CUSTOM_EXCEPTION_JSON, stripModuleFields( writer.write( new RemoteThrowable( CUSTOM_EXCEPTION ) ) ) );
     }
 
     @GwtIncompatible
@@ -137,10 +139,21 @@ public final class ThrowableTester extends AbstractTester {
     }
 
     public void testSerializeIllegalArgumentExceptionNonNull( ObjectWriterTester<RemoteThrowable> writer ) {
-        assertEquals( ILLEGAL_ARGUMENT_EXCEPTION_JSON, writer.write( new RemoteThrowable( ILLEGAL_ARGUMENT_EXCEPTION ) ) );
+        assertEquals( ILLEGAL_ARGUMENT_EXCEPTION_JSON, stripModuleFields( writer.write( new RemoteThrowable( ILLEGAL_ARGUMENT_EXCEPTION ) ) ) );
     }
 
     public void testSerializeCustomExceptionNonNull( ObjectWriterTester<RemoteThrowable> writer ) {
-        assertEquals( CUSTOM_EXCEPTION_JSON, writer.write( new RemoteThrowable( CUSTOM_EXCEPTION ) ) );
+        assertEquals( CUSTOM_EXCEPTION_JSON, stripModuleFields( writer.write( new RemoteThrowable( CUSTOM_EXCEPTION ) ) ) );
+    }
+
+    /**
+     * Strip Java 9+ StackTraceElement fields (classLoaderName, moduleName, moduleVersion)
+     * from JSON output so tests work on both GWT (no module fields) and Java 17+ (has module fields).
+     */
+    private static String stripModuleFields( String json ) {
+        return json
+                .replace( "\"classLoaderName\":null,", "" )
+                .replace( "\"moduleName\":null,", "" )
+                .replace( "\"moduleVersion\":null,", "" );
     }
 }

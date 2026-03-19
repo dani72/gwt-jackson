@@ -375,4 +375,33 @@ public abstract class AbstractTester extends Assert {
     public short[][] newArray2d( short[]... arrays ) {
         return arrays;
     }
+
+    /**
+     * Normalizes timezone offset formats so that both +0100 and +01:00 styles
+     * are treated as equivalent. Jackson 2.17+ outputs +01:00, while GWT's
+     * date serializer outputs +0100.
+     */
+    protected static String normalizeTz( String s ) {
+        // Convert +HH:MM or -HH:MM to +HHMM or -HHMM for uniform comparison
+        StringBuilder sb = new StringBuilder();
+        for ( int i = 0; i < s.length(); i++ ) {
+            char c = s.charAt( i );
+            if ( (c == '+' || c == '-') && i + 5 < s.length()
+                    && Character.isDigit( s.charAt( i + 1 ) )
+                    && Character.isDigit( s.charAt( i + 2 ) )
+                    && s.charAt( i + 3 ) == ':'
+                    && Character.isDigit( s.charAt( i + 4 ) )
+                    && Character.isDigit( s.charAt( i + 5 ) ) ) {
+                sb.append( c );
+                sb.append( s.charAt( i + 1 ) );
+                sb.append( s.charAt( i + 2 ) );
+                sb.append( s.charAt( i + 4 ) );
+                sb.append( s.charAt( i + 5 ) );
+                i += 5;
+            } else {
+                sb.append( c );
+            }
+        }
+        return sb.toString();
+    }
 }

@@ -20,8 +20,11 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
+        <groupId>net.ltgt.gwt.maven</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
+        <configuration>
+          <moduleName>${gwt.module}</moduleName>
+        </configuration>
       </plugin>
     </plugins>
   </build>

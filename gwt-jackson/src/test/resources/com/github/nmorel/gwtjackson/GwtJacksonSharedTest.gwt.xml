@@ -24,7 +24,7 @@
   <set-property name="gwt.logging.enabled" value="TRUE" />
   <set-property name="gwt.logging.consoleHandler" value="ENABLED" />
 
-  <set-property name="user.agent" value="gecko1_8" />
+  <set-property name="user.agent" value="safari" />
 
   <source path="client" />
   <source path="shared" />

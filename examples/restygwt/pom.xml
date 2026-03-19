@@ -31,7 +31,7 @@
     <dependency>
       <groupId>org.fusesource.restygwt</groupId>
       <artifactId>restygwt</artifactId>
-      <version>2.2.2</version>
+      <version>2.2.7</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -39,8 +39,11 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
+        <groupId>net.ltgt.gwt.maven</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
+        <configuration>
+          <moduleName>${gwt.module}</moduleName>
+        </configuration>
       </plugin>
     </plugins>
   </build>

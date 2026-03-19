@@ -32,6 +32,19 @@
 
   <build>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.java</include>
+          <include>**/*.gwt.xml</include>
+        </includes>
+      </resource>
+    </resources>
+
     <testResources>
       <testResource>
         <directory>src/test/resources</directory>
@@ -60,36 +73,9 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
+        <groupId>net.ltgt.gwt.maven</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <configuration>
-          <extra>${project.build.directory}/gwt/extra</extra>
-          <gen>${project.build.directory}/gwt/gen</gen>
-          <persistentunitcachedir>${project.build.directory}/gwt/cache</persistentunitcachedir>
-        </configuration>
         <executions>
-          <execution>
-            <id>packaging</id>
-            <goals>
-              <goal>resources</goal>
-            </goals>
-            <configuration>
-              <modules>
-                <module>com.github.nmorel.gwtjackson.GwtJackson</module>
-              </modules>
-            </configuration>
-          </execution>
-          <execution>
-            <id>test-dev-mode</id>
-            <phase>test</phase>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <module>com.github.nmorel.gwtjackson.GwtJacksonTest</module>
-              <out>${project.build.directory}/gwt/test/dev</out>
-            </configuration>
-          </execution>
           <execution>
             <id>test-prod</id>
             <phase>test</phase>
@@ -97,9 +83,7 @@
               <goal>test</goal>
             </goals>
             <configuration>
-              <module>com.github.nmorel.gwtjackson.GwtJacksonTest</module>
-              <out>${project.build.directory}/gwt/test/prod</out>
-              <productionMode>true</productionMode>
+              <moduleName>com.github.nmorel.gwtjackson.GwtJacksonTest</moduleName>
             </configuration>
           </execution>
         </executions>
@@ -133,11 +117,11 @@
   <dependencies>
     <!-- GWT dependencies -->
     <dependency>
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-user</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-dev</artifactId>
     </dependency>
 

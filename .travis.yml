@@ -1,9 +1,6 @@
 language: java
 
-sudo: false
-
 jdk:
-  - oraclejdk8
-  
+  - openjdk17
 
 script: mvn clean install -Dgwt.compiler.skip=true

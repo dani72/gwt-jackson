@@ -62,6 +62,20 @@ public @interface JsonInclude
      */
     public Include content() default Include.ALWAYS;
 
+    /**
+     * Specifies a filter to use when inclusion is {@link Include#CUSTOM}.
+     *
+     * @since 2.9
+     */
+    public Class<?> valueFilter() default Void.class;
+
+    /**
+     * Specifies a filter to use for content when inclusion is {@link Include#CUSTOM}.
+     *
+     * @since 2.9
+     */
+    public Class<?> contentFilter() default Void.class;
+
     /*
     /**********************************************************
     /* Value enumerations needed
@@ -182,7 +196,17 @@ public @interface JsonInclude
          *
          * @since 2.6
          */
-        USE_DEFAULTS
+        USE_DEFAULTS,
+
+        /**
+         * Value that indicates that separate <code>filter</code> Object (specified
+         * by {@link JsonInclude#valueFilter} for value itself, and/or
+         * {@link JsonInclude#contentFilter} for contents of structured types)
+         * is to be used for determining inclusion criteria.
+         *
+         * @since 2.9
+         */
+        CUSTOM
 
         ;
     }

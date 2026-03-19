@@ -29,7 +29,7 @@
   <description>Extension to support Guava types like Optional or ImmutableSet</description>
 
   <properties>
-    <guava.version>19.0</guava.version>
+    <guava.version>33.4.0-jre</guava.version>
   </properties>
 
   <dependencies>
@@ -52,12 +52,25 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-guava</artifactId>
-      <version>${jackson.version}</version>
+      <version>${jackson-databind.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.java</include>
+          <include>**/*.gwt.xml</include>
+        </includes>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -69,31 +82,9 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
+        <groupId>net.ltgt.gwt.maven</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <executions>
-          <execution>
-            <id>packaging</id>
-            <goals>
-              <goal>resources</goal>
-            </goals>
-            <configuration>
-              <modules>
-                <module>com.github.nmorel.gwtjackson.guava.GwtJacksonGuava</module>
-              </modules>
-            </configuration>
-          </execution>
-          <execution>
-            <id>test-dev-mode</id>
-            <phase>test</phase>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <module>com.github.nmorel.gwtjackson.guava.GwtJacksonGuavaTest</module>
-              <out>${project.build.directory}/gwt/test/dev</out>
-            </configuration>
-          </execution>
           <execution>
             <id>test-prod</id>
             <phase>test</phase>
@@ -101,9 +92,7 @@
               <goal>test</goal>
             </goals>
             <configuration>
-              <module>com.github.nmorel.gwtjackson.guava.GwtJacksonGuavaTest</module>
-              <out>${project.build.directory}/gwt/test/prod</out>
-              <productionMode>true</productionMode>
+              <moduleName>com.github.nmorel.gwtjackson.guava.GwtJacksonGuavaTest</moduleName>
             </configuration>
           </execution>
         </executions>

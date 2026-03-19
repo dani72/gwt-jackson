@@ -185,7 +185,15 @@ public @interface JsonFormat
          * Value that indicates that (JSON) boolean type
          * (true, false) should be used.
          */
-        BOOLEAN
+        BOOLEAN,
+
+        /**
+         * Value that indicates that the "natural" type of the value should
+         * be used (for example, native JSON types for JSON format).
+         *
+         * @since 2.9
+         */
+        NATURAL
         ;
 
         public boolean isNumeric() {
@@ -243,6 +251,29 @@ public @interface JsonFormat
          * serialization.
          */
         WRITE_SORTED_MAP_ENTRIES,
+
+        /**
+         * Override for <code>DeserializationFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES</code>,
+         * which allows case-insensitive matching of property names (but NOT values).
+         *
+         * @since 2.9
+         */
+        ACCEPT_CASE_INSENSITIVE_PROPERTIES,
+
+        /**
+         * Override for <code>DeserializationFeature.ACCEPT_CASE_INSENSITIVE_VALUES</code>,
+         * which allows case-insensitive matching of property values (but NOT property names).
+         *
+         * @since 2.10
+         */
+        ACCEPT_CASE_INSENSITIVE_VALUES,
+
+        /**
+         * Override for <code>MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES</code>.
+         *
+         * @since 2.12
+         */
+        WRITE_DATES_WITH_CONTEXT_TIME_ZONE,
         ;
     }
 }

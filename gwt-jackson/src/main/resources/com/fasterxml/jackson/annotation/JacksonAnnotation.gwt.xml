@@ -20,6 +20,7 @@
     <!--Only nested static class 'Value' should be excluded but syntax 'JacksonInject$Value.*' is not supported by GWT-->
     <exclude name="JacksonInject.*" />
     <exclude name="JsonSetter.*" />
+    <exclude name="JsonIncludeProperties.*" />
   </source>
   <!-- ObjectIdGenerators.Base implements Serializable but is not. We blacklist Jackson classes from RPC -->
   <inherits name="com.google.gwt.user.RemoteService" />

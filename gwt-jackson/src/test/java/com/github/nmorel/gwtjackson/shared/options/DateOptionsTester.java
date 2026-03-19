@@ -157,19 +157,20 @@ public final class DateOptionsTester extends AbstractTester {
         bean.mapSqlTimestamp = mapSqlTimestamp;
 
         String expected = "{" +
-                "\"date\":\"2012-08-18T15:45:56.540+0000\"," +
+                "\"date\":\"2012-08-18T15:45:56.540+00:00\"," +
                 "\"onlyDate\":\"/2012/08/18/\"," +
                 "\"onlyDateTz\":\"/2012/08/18/ +0000\"," +
                 "\"sqlDate\":\"" + bean.sqlDate.toString() + "\"," +
                 "\"sqlTime\":\"" + bean.sqlTime.toString() + "\"," +
-                "\"sqlTimestamp\":\"2012-08-18T15:45:56.543+0000\"," +
-                "\"mapDate\":{\"2012-08-18T15:45:56.544+0000\":\"java.util.Date\"}," +
-                "\"mapSqlDate\":{\"2012-08-18T15:45:56.545+0000\":\"java.sql.Date\"}," +
-                "\"mapSqlTime\":{\"2012-08-18T15:45:56.546+0000\":\"java.sql.Time\"}," +
-                "\"mapSqlTimestamp\":{\"2012-08-18T15:45:56.547+0000\":\"java.sql.Timestamp\"}" +
+                "\"sqlTimestamp\":\"2012-08-18T15:45:56.543+00:00\"," +
+                "\"mapDate\":{\"2012-08-18T15:45:56.544+00:00\":\"java.util.Date\"}," +
+                "\"mapSqlDate\":{\"2012-08-18T15:45:56.545+00:00\":\"java.sql.Date\"}," +
+                "\"mapSqlTime\":{\"2012-08-18T15:45:56.546+00:00\":\"java.sql.Time\"}," +
+                "\"mapSqlTimestamp\":{\"2012-08-18T15:45:56.547+00:00\":\"java.sql.Timestamp\"}" +
                 "}";
 
-        assertEquals( expected, writer.write( bean ) );
+        // GWT serializer uses +0000 format, Jackson 2.17+ uses +00:00 format
+        assertEquals( normalizeTz(expected), normalizeTz(writer.write( bean )) );
     }
 
     @SuppressWarnings("deprecation")
