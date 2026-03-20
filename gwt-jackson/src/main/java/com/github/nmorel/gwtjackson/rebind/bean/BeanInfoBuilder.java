@@ -28,7 +28,7 @@ import com.github.nmorel.gwtjackson.rebind.property.PropertyInfo;
 import com.google.gwt.core.ext.typeinfo.JAbstractMethod;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
+import java.util.Optional;
 
 /**
  * @author Nicolas Morel
@@ -39,9 +39,9 @@ final class BeanInfoBuilder {
 
     private List<JClassType> parameterizedTypes = Collections.emptyList();
 
-    private Optional<JClassType> builder = Optional.absent();
+    private Optional<JClassType> builder = Optional.empty();
 
-    private Optional<JAbstractMethod> creatorMethod = Optional.absent();
+    private Optional<JAbstractMethod> creatorMethod = Optional.empty();
 
     private Map<String, JParameter> creatorParameters = Collections.emptyMap();
 
@@ -51,13 +51,13 @@ final class BeanInfoBuilder {
 
     private boolean record;
 
-    private Optional<BeanTypeInfo> typeInfo = Optional.absent();
+    private Optional<BeanTypeInfo> typeInfo = Optional.empty();
 
-    private Optional<PropertyInfo> valuePropertyInfo = Optional.absent();
+    private Optional<PropertyInfo> valuePropertyInfo = Optional.empty();
 
-    private Optional<PropertyInfo> anyGetterPropertyInfo = Optional.absent();
+    private Optional<PropertyInfo> anyGetterPropertyInfo = Optional.empty();
 
-    private Optional<PropertyInfo> anySetterPropertyInfo = Optional.absent();
+    private Optional<PropertyInfo> anySetterPropertyInfo = Optional.empty();
 
     private Set<String> ignoredFields = Collections.emptySet();
 
@@ -77,9 +77,9 @@ final class BeanInfoBuilder {
 
     private boolean propertyOrderAlphabetic;
 
-    private Optional<BeanIdentityInfo> identityInfo = Optional.absent();
+    private Optional<BeanIdentityInfo> identityInfo = Optional.empty();
 
-    private Optional<Include> include = Optional.absent();
+    private Optional<Include> include = Optional.empty();
 
     BeanInfoBuilder() {
     }

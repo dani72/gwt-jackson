@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.github.nmorel.gwtjackson.rebind.bean.BeanIdentityInfo;
 import com.github.nmorel.gwtjackson.rebind.bean.BeanTypeInfo;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
+import java.util.Optional;
 
 /**
  * @author Nicolas Morel.
@@ -46,25 +46,25 @@ final class PropertyInfoBuilder {
 
     private boolean unwrapped = false;
 
-    private Optional<String> managedReference = Optional.absent();
+    private Optional<String> managedReference = Optional.empty();
 
-    private Optional<String> backReference = Optional.absent();
+    private Optional<String> backReference = Optional.empty();
 
-    private Optional<? extends FieldAccessor> getterAccessor = Optional.absent();
+    private Optional<? extends FieldAccessor> getterAccessor = Optional.empty();
 
-    private Optional<? extends FieldAccessor> setterAccessor = Optional.absent();
+    private Optional<? extends FieldAccessor> setterAccessor = Optional.empty();
 
-    private Optional<BeanIdentityInfo> identityInfo = Optional.absent();
+    private Optional<BeanIdentityInfo> identityInfo = Optional.empty();
 
-    private Optional<BeanTypeInfo> typeInfo = Optional.absent();
+    private Optional<BeanTypeInfo> typeInfo = Optional.empty();
 
-    private Optional<JsonFormat> format = Optional.absent();
+    private Optional<JsonFormat> format = Optional.empty();
 
-    private Optional<Include> include = Optional.absent();
+    private Optional<Include> include = Optional.empty();
 
-    private Optional<Boolean> ignoreUnknown = Optional.absent();
+    private Optional<Boolean> ignoreUnknown = Optional.empty();
 
-    private Optional<String[]> ignoredProperties = Optional.absent();
+    private Optional<String[]> ignoredProperties = Optional.empty();
 
     PropertyInfoBuilder( String propertyName, JType type ) {
         this.propertyName = propertyName;

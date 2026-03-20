@@ -16,6 +16,8 @@
 
 package com.github.nmorel.gwtjackson.rebind.bean;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,10 +29,7 @@ import com.github.nmorel.gwtjackson.rebind.property.PropertyInfo;
 import com.google.gwt.core.ext.typeinfo.JAbstractMethod;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableSet;
+import java.util.Optional;
 
 /**
  * <p>BeanInfo class.</p>
@@ -42,14 +41,14 @@ public final class BeanInfo {
 
     private final JClassType type;
 
-    private final ImmutableList<JClassType> parameterizedTypes;
+    private final List<JClassType> parameterizedTypes;
 
     /*####  Instantiation properties  ####*/
     private final Optional<JClassType> builder;
 
     private final Optional<JAbstractMethod> creatorMethod;
 
-    private final ImmutableMap<String, JParameter> creatorParameters;
+    private final Map<String, JParameter> creatorParameters;
 
     private final boolean creatorDefaultConstructor;
 
@@ -66,7 +65,7 @@ public final class BeanInfo {
     private final Optional<PropertyInfo> anySetterPropertyInfo;
 
     /*####  Visibility properties  ####*/
-    private final ImmutableSet<String> ignoredFields;
+    private final Set<String> ignoredFields;
 
     private final JsonAutoDetect.Visibility fieldVisibility;
 
@@ -81,7 +80,7 @@ public final class BeanInfo {
     private final boolean ignoreUnknown;
 
     /*####  Ordering properties  ####*/
-    private final ImmutableList<String> propertyOrderList;
+    private final List<String> propertyOrderList;
 
     private final boolean propertyOrderAlphabetic;
 
@@ -94,11 +93,11 @@ public final class BeanInfo {
     BeanInfo( JClassType type, List<JClassType> parameterizedTypes, Optional<JClassType> builder, Optional<JAbstractMethod> creatorMethod, Map<String, JParameter> creatorParameters, boolean creatorDefaultConstructor, boolean creatorDelegation, boolean record, Optional<BeanTypeInfo> typeInfo, Optional<PropertyInfo> valuePropertyInfo, Optional<PropertyInfo> anyGetterPropertyInfo, Optional<PropertyInfo> anySetterPropertyInfo, Set<String> ignoredFields, Visibility fieldVisibility, Visibility getterVisibility, Visibility isGetterVisibility, Visibility setterVisibility, Visibility creatorVisibility, boolean ignoreUnknown, List<String> propertyOrderList, boolean propertyOrderAlphabetic, Optional<BeanIdentityInfo> identityInfo, Optional<Include> include ) {
 
         this.type = type;
-        this.parameterizedTypes = ImmutableList.copyOf( parameterizedTypes );
+        this.parameterizedTypes = List.copyOf( parameterizedTypes );
 
         this.builder = builder;
         this.creatorMethod = creatorMethod;
-        this.creatorParameters = ImmutableMap.copyOf( creatorParameters );
+        this.creatorParameters = Collections.unmodifiableMap( new LinkedHashMap<>( creatorParameters ) );
         this.creatorDefaultConstructor = creatorDefaultConstructor;
         this.creatorDelegation = creatorDelegation;
         this.record = record;
@@ -106,7 +105,7 @@ public final class BeanInfo {
         this.valuePropertyInfo = valuePropertyInfo;
         this.anyGetterPropertyInfo = anyGetterPropertyInfo;
         this.anySetterPropertyInfo = anySetterPropertyInfo;
-        this.ignoredFields = ImmutableSet.copyOf( ignoredFields );
+        this.ignoredFields = Set.copyOf( ignoredFields );
 
         this.fieldVisibility = fieldVisibility;
         this.getterVisibility = getterVisibility;
@@ -115,7 +114,7 @@ public final class BeanInfo {
         this.creatorVisibility = creatorVisibility;
 
         this.ignoreUnknown = ignoreUnknown;
-        this.propertyOrderList = ImmutableList.copyOf( propertyOrderList );
+        this.propertyOrderList = List.copyOf( propertyOrderList );
         this.propertyOrderAlphabetic = propertyOrderAlphabetic;
         this.identityInfo = identityInfo;
         this.include = include;
@@ -135,7 +134,7 @@ public final class BeanInfo {
      *
      * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableList} object.
      */
-    public ImmutableList<JClassType> getParameterizedTypes() {
+    public List<JClassType> getParameterizedTypes() {
         return parameterizedTypes;
     }
 
@@ -162,7 +161,7 @@ public final class BeanInfo {
      *
      * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableMap} object.
      */
-    public ImmutableMap<String, JParameter> getCreatorParameters() {
+    public Map<String, JParameter> getCreatorParameters() {
         return creatorParameters;
     }
 
@@ -234,7 +233,7 @@ public final class BeanInfo {
      *
      * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableSet} object.
      */
-    public ImmutableSet<String> getIgnoredFields() {
+    public Set<String> getIgnoredFields() {
         return ignoredFields;
     }
 
@@ -297,7 +296,7 @@ public final class BeanInfo {
      *
      * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableList} object.
      */
-    public ImmutableList<String> getPropertyOrderList() {
+    public List<String> getPropertyOrderList() {
         return propertyOrderList;
     }
 

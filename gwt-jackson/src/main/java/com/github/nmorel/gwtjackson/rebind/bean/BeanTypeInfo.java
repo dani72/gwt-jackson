@@ -19,7 +19,7 @@ package com.github.nmorel.gwtjackson.rebind.bean;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
+import java.util.Map;
 
 /**
  * <p>BeanTypeInfo class.</p>
@@ -35,12 +35,12 @@ public final class BeanTypeInfo {
 
     private final String propertyName;
 
-    private final ImmutableMap<JClassType, String> mapTypeToSerializationMetadata;
+    private final Map<JClassType, String> mapTypeToSerializationMetadata;
 
-    private final ImmutableMap<JClassType, String> mapTypeToDeserializationMetadata;
+    private final Map<JClassType, String> mapTypeToDeserializationMetadata;
 
-    BeanTypeInfo( Id use, As include, String propertyName, ImmutableMap<JClassType, String> mapTypeToSerializationMetadata,
-                  ImmutableMap<JClassType, String> mapTypeToDeserializationMetadata ) {
+    BeanTypeInfo( Id use, As include, String propertyName, Map<JClassType, String> mapTypeToSerializationMetadata,
+                  Map<JClassType, String> mapTypeToDeserializationMetadata ) {
         this.use = use;
         this.include = include;
         this.propertyName = propertyName;
@@ -78,18 +78,18 @@ public final class BeanTypeInfo {
     /**
      * <p>Getter for the field <code>mapTypeToSerializationMetadata</code>.</p>
      *
-     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableMap} object.
+     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.Map} object.
      */
-    public ImmutableMap<JClassType, String> getMapTypeToSerializationMetadata() {
+    public Map<JClassType, String> getMapTypeToSerializationMetadata() {
         return mapTypeToSerializationMetadata;
     }
 
     /**
      * <p>Getter for the field <code>mapTypeToDeserializationMetadata</code>.</p>
      *
-     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableMap} object.
+     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.Map} object.
      */
-    public ImmutableMap<JClassType, String> getMapTypeToDeserializationMetadata() {
+    public Map<JClassType, String> getMapTypeToDeserializationMetadata() {
         return mapTypeToDeserializationMetadata;
     }
 }

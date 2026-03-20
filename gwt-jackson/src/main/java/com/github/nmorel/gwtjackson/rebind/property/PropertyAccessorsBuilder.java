@@ -25,9 +25,7 @@ import com.google.gwt.core.ext.typeinfo.HasAnnotations;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.base.Strings;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
+import java.util.Optional;
 
 /**
  * Used to aggregate field, getter method and setter method of the same field
@@ -40,21 +38,21 @@ final class PropertyAccessorsBuilder {
 
     private String propertyName;
 
-    private Optional<JField> field = Optional.absent();
+    private Optional<JField> field = Optional.empty();
 
-    private List<JField> fields = new ArrayList<JField>();
+    private List<JField> fields = new ArrayList<>();
 
-    private Optional<JMethod> getter = Optional.absent();
+    private Optional<JMethod> getter = Optional.empty();
 
-    private List<JMethod> getters = new ArrayList<JMethod>();
+    private List<JMethod> getters = new ArrayList<>();
 
-    private Optional<JMethod> setter = Optional.absent();
+    private Optional<JMethod> setter = Optional.empty();
 
-    private List<JMethod> setters = new ArrayList<JMethod>();
+    private List<JMethod> setters = new ArrayList<>();
 
-    private Optional<JParameter> parameter = Optional.absent();
+    private Optional<JParameter> parameter = Optional.empty();
 
-    private List<HasAnnotations> accessors = new ArrayList<HasAnnotations>();
+    private List<HasAnnotations> accessors = new ArrayList<>();
 
     PropertyAccessorsBuilder( String fieldName ) {
         this.fieldName = fieldName;
@@ -66,7 +64,7 @@ final class PropertyAccessorsBuilder {
 
     String computePropertyName() {
         Optional<JsonProperty> jsonProperty = CreatorUtils.getAnnotation( JsonProperty.class, accessors );
-        if ( jsonProperty.isPresent() && !Strings.isNullOrEmpty( jsonProperty.get().value() ) && !JsonProperty.USE_DEFAULT_NAME
+        if ( jsonProperty.isPresent() && jsonProperty.get().value() != null && !jsonProperty.get().value().isEmpty() && !JsonProperty.USE_DEFAULT_NAME
                 .equals( jsonProperty.get().value() ) ) {
             propertyName = jsonProperty.get().value();
         } else {
@@ -112,7 +110,7 @@ final class PropertyAccessorsBuilder {
     }
 
     PropertyAccessors build() {
-        return new PropertyAccessors( propertyName, field, getter, setter, parameter, ImmutableList.copyOf( fields ),
-                ImmutableList.copyOf( getters ), ImmutableList.copyOf( setters ), ImmutableList.copyOf( accessors ) );
+        return new PropertyAccessors( propertyName, field, getter, setter, parameter, List.copyOf( fields ),
+                List.copyOf( getters ), List.copyOf( setters ), List.copyOf( accessors ) );
     }
 }

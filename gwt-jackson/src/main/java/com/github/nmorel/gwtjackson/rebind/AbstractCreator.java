@@ -19,6 +19,8 @@ package com.github.nmorel.gwtjackson.rebind;
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,10 +58,8 @@ import com.google.gwt.core.ext.typeinfo.JGenericType;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.JTypeParameter;
-import com.google.gwt.thirdparty.guava.common.base.Function;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
-import com.google.gwt.thirdparty.guava.common.collect.Lists;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import com.google.gwt.user.rebind.AbstractSourceCreator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -274,7 +274,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     typeArgs = type.isParameterized().getTypeArgs();
                 }
 
-                ImmutableList.Builder<JSerializerType> parametersSerializerBuilder = ImmutableList.builder();
+                ArrayList<JSerializerType> parametersSerializerBuilder = new ArrayList<>();
                 for ( int i = 0; i < typeArgs.length; i++ ) {
                     JSerializerType parameterSerializerType;
                     if ( configuredSerializer.get().getParameters().length <= i ) {
@@ -287,9 +287,8 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     }
                     parametersSerializerBuilder.add( parameterSerializerType );
                 }
-                ImmutableList<JSerializerType> parametersSerializer = parametersSerializerBuilder.build();
-                builder.parameters( parametersSerializer );
-                builder.instance( methodCallCodeWithJMapperTypeParameters( configuredSerializer.get(), parametersSerializer ) );
+                builder.parameters( parametersSerializerBuilder );
+                builder.instance( methodCallCodeWithJMapperTypeParameters( configuredSerializer.get(), parametersSerializerBuilder ) );
 
             } else {
                 // The serializer has no parameters.
@@ -325,7 +324,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                 throw new UnsupportedTypeException( message );
             }
             JSerializerType parameterSerializerType = getJsonSerializerFromType( arrayType.getLeafType(), subtype );
-            builder.parameters( ImmutableList.of( parameterSerializerType ) );
+            builder.parameters( List.of( parameterSerializerType ) );
             builder.instance( CodeBlock.builder()
                     .add( "$T.newInstance($L)", arraySerializer, parameterSerializerType.getInstance() )
                     .build() );
@@ -354,9 +353,9 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
             BeanJsonMapperInfo mapperInfo = beanJsonSerializerCreator.create();
 
             // Generics and parameterized types serializers have no default constructor. They need serializers for each parameter.
-            ImmutableList<? extends JType> typeParameters = getTypeParameters( classType, subtype );
-            ImmutableList.Builder<JParameterizedSerializer> parametersSerializerBuilder = ImmutableList.builder();
-            ImmutableList.Builder<JSerializerType> parametersJsonSerializerBuilder = ImmutableList.builder();
+            List<? extends JType> typeParameters = getTypeParameters( classType, subtype );
+            ArrayList<JParameterizedSerializer> parametersSerializerBuilder = new ArrayList<>();
+            ArrayList<JSerializerType> parametersJsonSerializerBuilder = new ArrayList<>();
             for ( JType argType : typeParameters ) {
                 JSerializerType jsonSerializer = getJsonSerializerFromType( argType, subtype );
                 parametersSerializerBuilder.add(
@@ -365,11 +364,10 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                 parametersJsonSerializerBuilder.add( jsonSerializer );
             }
 
-            builder.parameters( parametersJsonSerializerBuilder.build() );
+            builder.parameters( parametersJsonSerializerBuilder );
             builder.beanMapper( true );
             builder.instance( constructorCallCode(
-                    ClassName.get( mapperInfo.getPackageName(), mapperInfo.getSimpleSerializerClassName() ), parametersSerializerBuilder
-                            .build() ) );
+                    ClassName.get( mapperInfo.getPackageName(), mapperInfo.getSimpleSerializerClassName() ), parametersSerializerBuilder ) );
             return builder.build();
         }
 
@@ -438,7 +436,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     typeArgs = type.isParameterized().getTypeArgs();
                 }
 
-                ImmutableList.Builder<JSerializerType> parametersSerializerBuilder = ImmutableList.builder();
+                ArrayList<JSerializerType> parametersSerializerBuilder = new ArrayList<>();
                 for ( int i = 0; i < typeArgs.length; i++ ) {
                     JSerializerType parameterSerializerType;
                     if ( keySerializer.get().getParameters().length <= i ) {
@@ -451,9 +449,8 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     }
                     parametersSerializerBuilder.add( parameterSerializerType );
                 }
-                ImmutableList<JSerializerType> parametersSerializer = parametersSerializerBuilder.build();
-                builder.parameters( parametersSerializer );
-                builder.instance( methodCallCodeWithJMapperTypeParameters( keySerializer.get(), parametersSerializer ) );
+                builder.parameters( parametersSerializerBuilder );
+                builder.instance( methodCallCodeWithJMapperTypeParameters( keySerializer.get(), parametersSerializerBuilder ) );
 
             } else {
                 // The serializer has no parameters.
@@ -557,7 +554,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     typeArgs = type.isParameterized().getTypeArgs();
                 }
 
-                ImmutableList.Builder<JDeserializerType> parametersDeserializerBuilder = ImmutableList.builder();
+                ArrayList<JDeserializerType> parametersDeserializerBuilder = new ArrayList<>();
                 for ( int i = 0; i < typeArgs.length; i++ ) {
                     JDeserializerType parameterDeserializerType;
                     if ( MapperType.KEY_DESERIALIZER == configuredDeserializer.get().getParameters()[i] ) {
@@ -567,9 +564,8 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     }
                     parametersDeserializerBuilder.add( parameterDeserializerType );
                 }
-                ImmutableList<JDeserializerType> parametersDeserializer = parametersDeserializerBuilder.build();
-                builder.parameters( parametersDeserializer );
-                builder.instance( methodCallCodeWithJMapperTypeParameters( configuredDeserializer.get(), parametersDeserializer ) );
+                builder.parameters( parametersDeserializerBuilder );
+                builder.instance( methodCallCodeWithJMapperTypeParameters( configuredDeserializer.get(), parametersDeserializerBuilder ) );
 
             } else {
                 // The deserializer has no parameters.
@@ -586,7 +582,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
 
         if ( typeOracle.isEnum( type ) ) {
             configuredDeserializer = configuration.getDeserializer( typeOracle.getEnum() );
-            return builder.instance( methodCallCodeWithClassParameters( configuredDeserializer.get(), ImmutableList.of( type ) ) ).build();
+            return builder.instance( methodCallCodeWithClassParameters( configuredDeserializer.get(), List.of( type ) ) ).build();
         }
 
         JArrayType arrayType = type.isArray();
@@ -632,7 +628,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
             }
 
             JDeserializerType parameterDeserializerType = getJsonDeserializerFromType( leafType, subtype );
-            builder.parameters( ImmutableList.of( parameterDeserializerType ) );
+            builder.parameters( List.of( parameterDeserializerType ) );
             builder.instance( CodeBlock.builder().add( "$T.newInstance($L, $L)", arrayDeserializer, parameterDeserializerType
                     .getInstance(), arrayCreator ).build() );
             return builder.build();
@@ -660,9 +656,9 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
             BeanJsonMapperInfo mapperInfo = beanJsonDeserializerCreator.create();
 
             // Generics and parameterized types deserializers have no default constructor. They need deserializers for each parameter.
-            ImmutableList<? extends JType> typeParameters = getTypeParameters( classType, subtype );
-            ImmutableList.Builder<JParameterizedDeserializer> parametersDeserializerBuilder = ImmutableList.builder();
-            ImmutableList.Builder<JDeserializerType> parametersJsonDeserializerBuilder = ImmutableList.builder();
+            List<? extends JType> typeParameters = getTypeParameters( classType, subtype );
+            ArrayList<JParameterizedDeserializer> parametersDeserializerBuilder = new ArrayList<>();
+            ArrayList<JDeserializerType> parametersJsonDeserializerBuilder = new ArrayList<>();
             for ( JType argType : typeParameters ) {
                 JDeserializerType jsonDeserializer = getJsonDeserializerFromType( argType, subtype );
                 parametersDeserializerBuilder.add(
@@ -671,11 +667,10 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                 parametersJsonDeserializerBuilder.add( jsonDeserializer );
             }
 
-            builder.parameters( parametersJsonDeserializerBuilder.build() );
+            builder.parameters( parametersJsonDeserializerBuilder );
             builder.beanMapper( true );
             builder.instance( constructorCallCode(
-                    ClassName.get( mapperInfo.getPackageName(), mapperInfo.getSimpleDeserializerClassName() ), parametersDeserializerBuilder
-                            .build() ) );
+                    ClassName.get( mapperInfo.getPackageName(), mapperInfo.getSimpleDeserializerClassName() ), parametersDeserializerBuilder ) );
             return builder.build();
         }
 
@@ -750,7 +745,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     typeArgs = type.isParameterized().getTypeArgs();
                 }
 
-                ImmutableList.Builder<JDeserializerType> parametersDeserializerBuilder = ImmutableList.builder();
+                ArrayList<JDeserializerType> parametersDeserializerBuilder = new ArrayList<>();
                 for ( int i = 0; i < typeArgs.length; i++ ) {
                     JDeserializerType parameterDeserializerType;
                     if ( MapperType.KEY_DESERIALIZER == keyDeserializer.get().getParameters()[i] ) {
@@ -760,9 +755,8 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     }
                     parametersDeserializerBuilder.add( parameterDeserializerType );
                 }
-                ImmutableList<JDeserializerType> parametersDeserializer = parametersDeserializerBuilder.build();
-                builder.parameters( parametersDeserializer );
-                builder.instance( methodCallCodeWithJMapperTypeParameters( keyDeserializer.get(), parametersDeserializer ) );
+                builder.parameters( parametersDeserializerBuilder );
+                builder.instance( methodCallCodeWithJMapperTypeParameters( keyDeserializer.get(), parametersDeserializerBuilder ) );
 
             } else {
                 // The deserializer has no parameters.
@@ -773,7 +767,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
 
         if ( typeOracle.isEnum( type ) ) {
             keyDeserializer = configuration.getKeyDeserializer( typeOracle.getEnum() );
-            return builder.instance( methodCallCodeWithClassParameters( keyDeserializer.get(), ImmutableList.of( type ) ) ).build();
+            return builder.instance( methodCallCodeWithClassParameters( keyDeserializer.get(), List.of( type ) ) ).build();
         }
 
         if ( useDefault ) {
@@ -789,10 +783,10 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
         throw new UnsupportedTypeException( message );
     }
 
-    private ImmutableList<? extends JType> getTypeParameters( JClassType classType, boolean subtype ) {
+    private List<? extends JType> getTypeParameters( JClassType classType, boolean subtype ) {
         JParameterizedType parameterizedType = classType.isParameterized();
         if ( null != parameterizedType ) {
-            return ImmutableList.copyOf( parameterizedType.getTypeArgs() );
+            return Arrays.asList( parameterizedType.getTypeArgs() );
         }
 
         JGenericType genericType = classType.isGenericType();
@@ -808,7 +802,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     }
                 }
 
-                ImmutableList.Builder<JType> builder = ImmutableList.builder();
+                ArrayList<JType> builder = new ArrayList<>();
                 for ( JTypeParameter typeParameter : genericType.getTypeParameters() ) {
                     JType arg = null;
                     if ( null != parentClassType && null != parentClassType.isParameterized() ) {
@@ -831,17 +825,17 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
                     }
                     builder.add( arg );
                 }
-                return builder.build();
+                return builder;
             } else {
-                ImmutableList.Builder<JType> builder = ImmutableList.builder();
+                ArrayList<JType> builder = new ArrayList<>();
                 for ( JTypeParameter typeParameter : genericType.getTypeParameters() ) {
                     builder.add( typeParameter.getBaseType() );
                 }
-                return builder.build();
+                return builder;
             }
         }
 
-        return ImmutableList.of();
+        return List.of();
     }
 
     /**
@@ -852,7 +846,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
      *
      * @return the code calling the constructor
      */
-    private CodeBlock constructorCallCode( ClassName className, ImmutableList<? extends JParameterizedMapper> parameters ) {
+    private CodeBlock constructorCallCode( ClassName className, List<? extends JParameterizedMapper> parameters ) {
         CodeBlock.Builder builder = CodeBlock.builder();
         builder.add( "new $T", className );
         return methodCallCodeWithJParameterizedMapperParameters( builder, parameters );
@@ -884,7 +878,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
      */
     private CodeBlock methodCallCode( MapperInstance instance ) {
         CodeBlock.Builder builder = initMethodCallCode( instance );
-        return methodCallParametersCode( builder, ImmutableList.<CodeBlock>of() );
+        return methodCallParametersCode( builder, List.<CodeBlock>of() );
     }
 
     /**
@@ -895,15 +889,11 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
      *
      * @return the code to create the mapper
      */
-    private CodeBlock methodCallCodeWithClassParameters( MapperInstance instance, ImmutableList<? extends JType> parameters ) {
+    private CodeBlock methodCallCodeWithClassParameters( MapperInstance instance, List<? extends JType> parameters ) {
         CodeBlock.Builder builder = initMethodCallCode( instance );
-        return methodCallParametersCode( builder, Lists.transform( parameters, new Function<JType, CodeBlock>() {
-
-            @Override
-            public CodeBlock apply( JType jType ) {
-                return CodeBlock.builder().add( "$T.class", typeName( jType ) ).build();
-            }
-        } ) );
+        return methodCallParametersCode( builder, parameters.stream()
+                .map( jType -> CodeBlock.builder().add( "$T.class", typeName( jType ) ).build() )
+                .collect( Collectors.toList() ) );
     }
 
     /**
@@ -914,7 +904,7 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
      *
      * @return the code to create the mapper
      */
-    private CodeBlock methodCallCodeWithJMapperTypeParameters( MapperInstance instance, ImmutableList<? extends JMapperType> parameters ) {
+    private CodeBlock methodCallCodeWithJMapperTypeParameters( MapperInstance instance, List<? extends JMapperType> parameters ) {
         CodeBlock.Builder builder = initMethodCallCode( instance );
         return methodCallCodeWithJMapperTypeParameters( builder, parameters );
     }
@@ -927,15 +917,11 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
      *
      * @return the code
      */
-    private CodeBlock methodCallCodeWithJMapperTypeParameters( CodeBlock.Builder builder, ImmutableList<? extends JMapperType> parameters
+    private CodeBlock methodCallCodeWithJMapperTypeParameters( CodeBlock.Builder builder, List<? extends JMapperType> parameters
     ) {
-        return methodCallParametersCode( builder, Lists.transform( parameters, new Function<JMapperType, CodeBlock>() {
-
-            @Override
-            public CodeBlock apply( JMapperType jMapperType ) {
-                return jMapperType.getInstance();
-            }
-        } ) );
+        return methodCallParametersCode( builder, parameters.stream()
+                .map( JMapperType::getInstance )
+                .collect( Collectors.toList() ) );
     }
 
     /**
@@ -946,16 +932,12 @@ public abstract class AbstractCreator extends AbstractSourceCreator {
      *
      * @return the code
      */
-    private CodeBlock methodCallCodeWithJParameterizedMapperParameters( CodeBlock.Builder builder, ImmutableList<? extends
+    private CodeBlock methodCallCodeWithJParameterizedMapperParameters( CodeBlock.Builder builder, List<? extends
             JParameterizedMapper> parameters
     ) {
-        return methodCallParametersCode( builder, Lists.transform( parameters, new Function<JParameterizedMapper, CodeBlock>() {
-
-            @Override
-            public CodeBlock apply( JParameterizedMapper jMapperType ) {
-                return jMapperType.getInstance();
-            }
-        } ) );
+        return methodCallParametersCode( builder, parameters.stream()
+                .map( JParameterizedMapper::getInstance )
+                .collect( Collectors.toList() ) );
     }
 
     /**

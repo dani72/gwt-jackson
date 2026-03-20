@@ -57,10 +57,9 @@ import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.base.Strings;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.github.nmorel.gwtjackson.rebind.CreatorUtils.findFirstEncounteredAnnotationsOnAllHierarchy;
 import static com.github.nmorel.gwtjackson.rebind.CreatorUtils.getAnnotation;
@@ -119,7 +118,7 @@ public final class BeanProcessor {
         if ( jsonPropertyOrder.isPresent() && jsonPropertyOrder.get().value().length > 0 ) {
             builder.setPropertyOrderList( Arrays.asList( jsonPropertyOrder.get().value() ) );
         } else if ( !builder.getCreatorParameters().isEmpty() ) {
-            List<String> propertyOrderList = new ArrayList<String>( builder.getCreatorParameters().keySet() );
+            List<String> propertyOrderList = new ArrayList<>( builder.getCreatorParameters().keySet() );
             builder.setPropertyOrderList( propertyOrderList );
             if ( builder.isPropertyOrderAlphabetic() ) {
                 Collections.sort( propertyOrderList );
@@ -155,7 +154,7 @@ public final class BeanProcessor {
 
         Optional<JClassType> mixinClass = configuration.getMixInAnnotations( beanType );
 
-        List<JClassType> accessors = new ArrayList<JClassType>();
+        List<JClassType> accessors = new ArrayList<>();
         if ( mixinClass.isPresent() ) {
             accessors.add( mixinClass.get() );
         }
@@ -191,7 +190,7 @@ public final class BeanProcessor {
                 //   * or it has only one parameter
                 // - or all its parameters are annotated with JsonProperty
 
-                List<JConstructor> constructors = new ArrayList<JConstructor>();
+                List<JConstructor> constructors = new ArrayList<>();
                 if ( mixinClass.isPresent() && null == mixinClass.get().isInterface() ) {
                     JConstructor mixinConstructor = mixinClass.get().findConstructor( constructor.getParameterTypes() );
                     if ( null != mixinConstructor ) {
@@ -222,7 +221,7 @@ public final class BeanProcessor {
             for ( JMethod method : beanType.getMethods() ) {
                 if ( method.isStatic() ) {
 
-                    List<JMethod> methods = new ArrayList<JMethod>();
+                    List<JMethod> methods = new ArrayList<>();
                     if ( mixinClass.isPresent() && null == mixinClass.get().isInterface() ) {
                         JMethod mixinMethod = mixinClass.get().findMethod( method.getName(), method.getParameterTypes() );
                         if ( null != mixinMethod && mixinMethod.isStatic() ) {
@@ -251,7 +250,7 @@ public final class BeanProcessor {
             builder.setRecord( true );
 
             // Collect non-static fields (= record components) in declaration order
-            List<JField> components = new ArrayList<JField>();
+            List<JField> components = new ArrayList<>();
             for ( JField field : beanType.getFields() ) {
                 if ( !field.isStatic() ) {
                     components.add( field );
@@ -270,11 +269,11 @@ public final class BeanProcessor {
                         }
                     }
                     if ( matches ) {
-                        ImmutableMap.Builder<String, JParameter> params = ImmutableMap.builder();
+                        LinkedHashMap<String, JParameter> params = new LinkedHashMap<>();
                         for ( int i = 0; i < components.size(); i++ ) {
                             params.put( components.get( i ).getName(), constructor.getParameters()[i] );
                         }
-                        builder.setCreatorParameters( params.build() );
+                        builder.setCreatorParameters( params );
                         builder.setCreatorMethod( Optional.<JAbstractMethod>of( constructor ) );
                         builder.setCreatorDefaultConstructor( false );
                         return;
@@ -294,7 +293,7 @@ public final class BeanProcessor {
             defaultConstructor = true;
             creatorMethod = Optional.<JAbstractMethod>of( creatorDefaultConstructor );
         } else {
-            creatorMethod = Optional.absent();
+            creatorMethod = Optional.empty();
         }
 
         builder.setCreatorMethod( creatorMethod );
@@ -305,16 +304,16 @@ public final class BeanProcessor {
                     .get( 0 ), JsonProperty.class ) ) {
                 // delegation constructor
                 builder.setCreatorDelegation( true );
-                builder.setCreatorParameters( ImmutableMap.of( BeanJsonDeserializerCreator.DELEGATION_PARAM_NAME, creatorMethod.get()
+                builder.setCreatorParameters( Map.of( BeanJsonDeserializerCreator.DELEGATION_PARAM_NAME, creatorMethod.get()
                         .getParameters()[0] ) );
             } else {
                 // we want the property name define in the mixin and the parameter defined in the real creator method
-                ImmutableMap.Builder<String, JParameter> creatorParameters = ImmutableMap.builder();
+                LinkedHashMap<String, JParameter> creatorParameters = new LinkedHashMap<>();
                 for ( int i = 0; i < creatorMethod.get().getParameters().length; i++ ) {
                     creatorParameters.put( creators.get( 0 ).getParameters()[i].getAnnotation( JsonProperty.class ).value(), creators
                             .get( creators.size() - 1 ).getParameters()[i] );
                 }
-                builder.setCreatorParameters( creatorParameters.build() );
+                builder.setCreatorParameters( creatorParameters );
             }
         }
     }
@@ -331,8 +330,8 @@ public final class BeanProcessor {
 
     private static Optional<BeanIdentityInfo> processIdentity( TreeLogger logger, JacksonTypeOracle typeOracle, RebindConfiguration
             configuration, JClassType type ) throws UnableToCompleteException {
-        return processIdentity( logger, typeOracle, configuration, type, Optional.<JsonIdentityInfo>absent(), Optional
-                .<JsonIdentityReference>absent() );
+        return processIdentity( logger, typeOracle, configuration, type, Optional.<JsonIdentityInfo>empty(), Optional
+                .<JsonIdentityReference>empty() );
     }
 
     /**
@@ -392,12 +391,12 @@ public final class BeanProcessor {
             }
             return Optional.of( beanIdentityInfo );
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     private static Optional<BeanTypeInfo> processType( TreeLogger logger, JacksonTypeOracle typeOracle, RebindConfiguration
             configuration, JClassType type ) throws UnableToCompleteException {
-        return processType( logger, typeOracle, configuration, type, Optional.<JsonTypeInfo>absent(), Optional.<JsonSubTypes>absent() );
+        return processType( logger, typeOracle, configuration, type, Optional.<JsonTypeInfo>empty(), Optional.<JsonSubTypes>empty() );
     }
 
     /**
@@ -420,7 +419,7 @@ public final class BeanProcessor {
         if ( !jsonTypeInfo.isPresent() ) {
             jsonTypeInfo = findFirstEncounteredAnnotationsOnAllHierarchy( configuration, type, JsonTypeInfo.class );
             if ( !jsonTypeInfo.isPresent() ) {
-                return Optional.absent();
+                return Optional.empty();
             }
         }
 
@@ -433,10 +432,10 @@ public final class BeanProcessor {
 
         // Metadata is extracted separately for ser/deser because findNameOnJsonSubTypes uses
         // the subtype list to determine which parent @JsonSubTypes annotations to consult.
-        ImmutableMap<JClassType, String> classToSerializationMetadata = extractMetadata( logger, configuration, type, jsonTypeInfo,
+        Map<JClassType, String> classToSerializationMetadata = extractMetadata( logger, configuration, type, jsonTypeInfo,
                 propertySubTypes, typeSubTypes, CreatorUtils
                         .filterSubtypesForSerialization( logger, configuration, type ) );
-        ImmutableMap<JClassType, String> classToDeserializationMetadata = extractMetadata( logger, configuration, type, jsonTypeInfo,
+        Map<JClassType, String> classToDeserializationMetadata = extractMetadata( logger, configuration, type, jsonTypeInfo,
                 propertySubTypes, typeSubTypes, CreatorUtils
                         .filterSubtypesForDeserialization( logger, configuration, type ) );
 
@@ -444,12 +443,12 @@ public final class BeanProcessor {
                 new BeanTypeInfo( use, include, propertyName, classToSerializationMetadata, classToDeserializationMetadata ) );
     }
 
-    private static ImmutableMap<JClassType, String> extractMetadata( TreeLogger logger, RebindConfiguration configuration, JClassType
+    private static Map<JClassType, String> extractMetadata( TreeLogger logger, RebindConfiguration configuration, JClassType
             type, Optional<JsonTypeInfo> jsonTypeInfo, Optional<JsonSubTypes> propertySubTypes, Optional<JsonSubTypes> typeSubTypes,
-                                                                     ImmutableList<JClassType> allSubtypes ) throws
+                                                                     List<JClassType> allSubtypes ) throws
             UnableToCompleteException {
 
-        ImmutableMap.Builder<JClassType, String> classToMetadata = ImmutableMap.builder();
+        LinkedHashMap<JClassType, String> classToMetadata = new LinkedHashMap<>();
 
         classToMetadata.put( type, extractTypeMetadata( logger, configuration, type, type, jsonTypeInfo
                 .get(), propertySubTypes, typeSubTypes, allSubtypes ) );
@@ -458,25 +457,25 @@ public final class BeanProcessor {
             classToMetadata.put( subtype, extractTypeMetadata( logger, configuration, type, subtype, jsonTypeInfo
                     .get(), propertySubTypes, typeSubTypes, allSubtypes ) );
         }
-        return classToMetadata.build();
+        return Collections.unmodifiableMap( classToMetadata );
     }
 
     private static String extractTypeMetadata( TreeLogger logger, RebindConfiguration configuration, JClassType baseType, JClassType
             subtype, JsonTypeInfo typeInfo, Optional<JsonSubTypes> propertySubTypes, Optional<JsonSubTypes> baseSubTypes,
-                                               ImmutableList<JClassType> allSubtypes ) throws UnableToCompleteException {
-        switch ( typeInfo.use() ) {
-            case NAME:
+                                               List<JClassType> allSubtypes ) throws UnableToCompleteException {
+        return switch ( typeInfo.use() ) {
+            case NAME -> {
                 // we first look the name on JsonSubTypes annotations. Top ones override the bottom ones.
                 String name = findNameOnJsonSubTypes( baseType, subtype, allSubtypes, propertySubTypes, baseSubTypes );
                 if ( null != name && !"".equals( name ) ) {
-                    return name;
+                    yield name;
                 }
 
                 // we look if the name is defined on the type with JsonTypeName
                 Optional<JsonTypeName> typeName = findFirstEncounteredAnnotationsOnAllHierarchy( configuration, subtype, JsonTypeName
                         .class );
-                if ( typeName.isPresent() && !Strings.isNullOrEmpty( typeName.get().value() ) ) {
-                    return typeName.get().value();
+                if ( typeName.isPresent() && typeName.get().value() != null && !typeName.get().value().isEmpty() ) {
+                    yield typeName.get().value();
                 }
 
                 // we use the default name (ie simple name of the class)
@@ -485,23 +484,26 @@ public final class BeanProcessor {
                 if ( indexLastDot != -1 ) {
                     simpleBinaryName = simpleBinaryName.substring( indexLastDot + 1 );
                 }
-                return simpleBinaryName;
-            case MINIMAL_CLASS:
+                yield simpleBinaryName;
+            }
+            case MINIMAL_CLASS -> {
                 if ( !baseType.getPackage().isDefault() ) {
                     String basePackage = baseType.getPackage().getName();
                     if ( subtype.getQualifiedBinaryName().startsWith( basePackage + "." ) ) {
-                        return subtype.getQualifiedBinaryName().substring( basePackage.length() );
+                        yield subtype.getQualifiedBinaryName().substring( basePackage.length() );
                     }
                 }
-            case CLASS:
-                return subtype.getQualifiedBinaryName();
-            default:
+                yield subtype.getQualifiedBinaryName();
+            }
+            case CLASS -> subtype.getQualifiedBinaryName();
+            default -> {
                 logger.log( TreeLogger.Type.ERROR, "JsonTypeInfo.Id." + typeInfo.use() + " is not supported" );
                 throw new UnableToCompleteException();
-        }
+            }
+        };
     }
 
-    private static String findNameOnJsonSubTypes( JClassType baseType, JClassType subtype, ImmutableList<JClassType> allSubtypes,
+    private static String findNameOnJsonSubTypes( JClassType baseType, JClassType subtype, List<JClassType> allSubtypes,
                                                   Optional<JsonSubTypes> propertySubTypes, Optional<JsonSubTypes> baseSubTypes ) {
         JsonSubTypes.Type typeFound = findTypeOnSubTypes( subtype, propertySubTypes );
         if ( null != typeFound ) {
@@ -518,7 +520,7 @@ public final class BeanProcessor {
             JClassType type = subtype;
             while ( null != type ) {
                 if ( allSubtypes.contains( type ) ) {
-                    JsonSubTypes.Type found = findTypeOnSubTypes( subtype, Optional.fromNullable( type
+                    JsonSubTypes.Type found = findTypeOnSubTypes( subtype, Optional.ofNullable( type
                             .getAnnotation( JsonSubTypes.class ) ) );
                     if ( null != found ) {
                         typeFound = found;

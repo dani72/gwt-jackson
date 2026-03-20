@@ -23,8 +23,8 @@ import com.google.gwt.core.ext.typeinfo.HasAnnotations;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
+import java.util.Optional;
+import java.util.List;
 
 /**
  * <p>PropertyAccessors class.</p>
@@ -44,17 +44,17 @@ public final class PropertyAccessors {
 
     private final Optional<JParameter> parameter;
 
-    private final ImmutableList<JField> fields;
+    private final List<JField> fields;
 
-    private final ImmutableList<JMethod> getters;
+    private final List<JMethod> getters;
 
-    private final ImmutableList<JMethod> setters;
+    private final List<JMethod> setters;
 
-    private final ImmutableList<HasAnnotations> accessors;
+    private final List<HasAnnotations> accessors;
 
     PropertyAccessors( String propertyName, Optional<JField> field, Optional<JMethod> getter, Optional<JMethod> setter,
-                       Optional<JParameter> parameter, ImmutableList<JField> fields, ImmutableList<JMethod> getters,
-                       ImmutableList<JMethod> setters, ImmutableList<HasAnnotations> accessors ) {
+                       Optional<JParameter> parameter, List<JField> fields, List<JMethod> getters,
+                       List<JMethod> setters, List<HasAnnotations> accessors ) {
 
         this.propertyName = propertyName;
         this.field = field;

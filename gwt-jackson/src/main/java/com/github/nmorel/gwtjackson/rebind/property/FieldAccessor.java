@@ -18,8 +18,8 @@ package com.github.nmorel.gwtjackson.rebind.property;
 
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.base.Preconditions;
+import java.util.Optional;
+import java.util.Objects;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 
@@ -38,14 +38,14 @@ public abstract class FieldAccessor {
         private final Optional<MethodSpec> additionalMethod;
 
         public Accessor( CodeBlock accessor ) {
-            Preconditions.checkNotNull( accessor );
+            Objects.requireNonNull( accessor );
             this.accessor = accessor;
-            this.additionalMethod = Optional.absent();
+            this.additionalMethod = Optional.empty();
         }
 
         public Accessor( CodeBlock accessor, MethodSpec additionalMethod ) {
-            Preconditions.checkNotNull( accessor );
-            Preconditions.checkNotNull( additionalMethod );
+            Objects.requireNonNull( accessor );
+            Objects.requireNonNull( additionalMethod );
 
             this.accessor = accessor;
             this.additionalMethod = Optional.of( additionalMethod );
@@ -84,8 +84,10 @@ public abstract class FieldAccessor {
      */
     protected FieldAccessor( String propertyName, boolean samePackage, boolean fieldAutoDetect, Optional<JField> field,
                              boolean methodAutoDetect, Optional<JMethod> method ) {
-        Preconditions.checkNotNull( propertyName );
-        Preconditions.checkArgument( field.isPresent() || method.isPresent(), "At least one of the field or method must be given" );
+        Objects.requireNonNull( propertyName );
+        if ( !field.isPresent() && !method.isPresent() ) {
+            throw new IllegalArgumentException( "At least one of the field or method must be given" );
+        }
 
         this.propertyName = propertyName;
         this.samePackage = samePackage;

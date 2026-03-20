@@ -71,7 +71,7 @@ public final class JTypeName {
 
     private static final class TypeResolver {
 
-        private Set<String> resolvedTypes = new HashSet<String>();
+        private Set<String> resolvedTypes = new HashSet<>();
 
         /**
          * @param type the type
@@ -208,12 +208,10 @@ public final class JTypeName {
         }
 
         private WildcardTypeName wildcardName( JWildcardType type ) {
-            switch ( type.getBoundType() ) {
-                case SUPER:
-                    return WildcardTypeName.supertypeOf( typeName( type.getFirstBound() ) );
-                default:
-                    return WildcardTypeName.subtypeOf( typeName( type.getFirstBound() ) );
-            }
+            return switch ( type.getBoundType() ) {
+                case SUPER -> WildcardTypeName.supertypeOf( typeName( type.getFirstBound() ) );
+                default -> WildcardTypeName.subtypeOf( typeName( type.getFirstBound() ) );
+            };
         }
 
         private ClassName className( JClassType type ) {
@@ -225,7 +223,7 @@ public final class JTypeName {
             }
 
             // We look for all enclosing types and add them at the head.
-            List<String> types = new ArrayList<String>();
+            List<String> types = new ArrayList<>();
             types.add( type.getSimpleSourceName() );
             while ( null != enclosingType ) {
                 types.add( 0, enclosingType.getSimpleSourceName() );

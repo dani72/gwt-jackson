@@ -37,7 +37,7 @@ import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
+import java.util.Optional;
 
 /**
  * <p>JacksonTypeOracle class.</p>
@@ -75,7 +75,7 @@ public class JacksonTypeOracle {
 
     private final JClassType recordType;
 
-    private final Map<JClassType, BeanJsonMapperInfo> typeToMapperInfo = new HashMap<JClassType, BeanJsonMapperInfo>();
+    private final Map<JClassType, BeanJsonMapperInfo> typeToMapperInfo = new HashMap<>();
 
     /**
      * <p>Constructor for JacksonTypeOracle.</p>
@@ -380,11 +380,11 @@ public class JacksonTypeOracle {
         try {
             Class asClass = (Class) annotation.getClass().getDeclaredMethod( name ).invoke( annotation );
             if ( asClass != Void.class ) {
-                return Optional.fromNullable( getType( asClass.getCanonicalName() ) );
+                return Optional.ofNullable( getType( asClass.getCanonicalName() ) );
             }
         } catch ( Exception e ) {
             logger.log( Type.ERROR, "Cannot find method " + name + " on JsonDeserialize annotation", e );
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 }

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.github.nmorel.gwtjackson.rebind.bean.BeanIdentityInfo;
 import com.github.nmorel.gwtjackson.rebind.bean.BeanTypeInfo;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
+import java.util.Optional;
 
 /**
  * <p>PropertyInfo class.</p>

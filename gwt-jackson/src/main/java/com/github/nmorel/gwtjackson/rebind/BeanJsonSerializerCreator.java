@@ -19,6 +19,7 @@ package com.github.nmorel.gwtjackson.rebind;
 import javax.lang.model.element.Modifier;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -54,9 +55,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.i18n.client.TimeZone;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.base.Strings;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
+import java.util.Optional;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -109,7 +108,7 @@ public class BeanJsonSerializerCreator extends AbstractBeanJsonCreator {
             if ( beanInfo.getValuePropertyInfo().isPresent() ) {
                 typeBuilder.addMethod( buildInitValueSerializerMethod( beanInfo.getValuePropertyInfo().get() ) );
             } else {
-                Map<PropertyInfo, JSerializerType> propertiesMap = new LinkedHashMap<PropertyInfo, JSerializerType>();
+                Map<PropertyInfo, JSerializerType> propertiesMap = new LinkedHashMap<>();
                 for ( PropertyInfo propertyInfo : properties.values() ) {
                     JSerializerType serializerType = getJsonSerializerFromProperty( propertyInfo );
                     if ( null != serializerType ) {
@@ -139,7 +138,7 @@ public class BeanJsonSerializerCreator extends AbstractBeanJsonCreator {
             typeBuilder.addMethod( buildInitTypeInfoMethod() );
         }
 
-        ImmutableList<JClassType> subtypes = filterSubtypes();
+        List<JClassType> subtypes = filterSubtypes();
         if ( !subtypes.isEmpty() ) {
             typeBuilder.addMethod( buildInitMapSubtypeClassToSerializerMethod( subtypes ) );
         }
@@ -254,7 +253,7 @@ public class BeanJsonSerializerCreator extends AbstractBeanJsonCreator {
                 .build();
     }
 
-    private MethodSpec buildInitMapSubtypeClassToSerializerMethod( ImmutableList<JClassType> subtypes )
+    private MethodSpec buildInitMapSubtypeClassToSerializerMethod( List<JClassType> subtypes )
             throws UnableToCompleteException {
 
         Class[] mapTypes = new Class[]{Class.class, SubtypeSerializer.class};
@@ -309,7 +308,7 @@ public class BeanJsonSerializerCreator extends AbstractBeanJsonCreator {
     private Optional<JSerializerType> getIdentitySerializerType( BeanIdentityInfo identityInfo ) throws UnableToCompleteException,
             UnsupportedTypeException {
         if ( identityInfo.isIdABeanProperty() ) {
-            return Optional.absent();
+            return Optional.empty();
         } else {
             return Optional.of( getJsonSerializerFromType( identityInfo.getType().get() ) );
         }
@@ -414,7 +413,7 @@ public class BeanJsonSerializerCreator extends AbstractBeanJsonCreator {
                 && !property.getInclude().isPresent()
                 && !property.isUnwrapped() ) {
             // none of the parameter are set so we don't generate the method
-            return Optional.absent();
+            return Optional.empty();
         }
 
         JClassType annotatedType = findFirstTypeToApplyPropertyAnnotation( serializerType );
@@ -428,7 +427,7 @@ public class BeanJsonSerializerCreator extends AbstractBeanJsonCreator {
 
         if ( property.getFormat().isPresent() ) {
             JsonFormat format = property.getFormat().get();
-            if ( !Strings.isNullOrEmpty( format.timezone() ) && !JsonFormat.DEFAULT_TIMEZONE.equals( format.timezone() ) ) {
+            if ( format.timezone() != null && !format.timezone().isEmpty() && !JsonFormat.DEFAULT_TIMEZONE.equals( format.timezone() ) ) {
                 java.util.TimeZone timeZoneJdk = java.util.TimeZone.getTimeZone( format.timezone() );
                 // in java the offset is in milliseconds from timezone to GMT
                 // in gwt the offset is in minutes from GMT to timezone

@@ -19,7 +19,7 @@ package com.github.nmorel.gwtjackson.rebind;
 import com.github.nmorel.gwtjackson.rebind.bean.BeanInfo;
 import com.github.nmorel.gwtjackson.rebind.property.PropertyInfo;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
+import java.util.Map;
 
 /**
  * <p>BeanJsonMapperInfo class.</p>
@@ -41,7 +41,7 @@ public class BeanJsonMapperInfo {
 
     private final BeanInfo beanInfo;
 
-    private final ImmutableMap<String, PropertyInfo> properties;
+    private final Map<String, PropertyInfo> properties;
 
     /**
      * <p>Constructor for BeanJsonMapperInfo.</p>
@@ -52,10 +52,10 @@ public class BeanJsonMapperInfo {
      * @param simpleSerializerClassName a {@link java.lang.String} object.
      * @param simpleDeserializerClassName a {@link java.lang.String} object.
      * @param beanInfo a {@link com.github.nmorel.gwtjackson.rebind.bean.BeanInfo} object.
-     * @param properties a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableMap} object.
+     * @param properties a {@link com.google.gwt.thirdparty.guava.common.collect.Map} object.
      */
     public BeanJsonMapperInfo( JClassType type, String packageName, boolean samePackage, String simpleSerializerClassName,
-                               String simpleDeserializerClassName, BeanInfo beanInfo, ImmutableMap<String, PropertyInfo> properties ) {
+                               String simpleDeserializerClassName, BeanInfo beanInfo, Map<String, PropertyInfo> properties ) {
         this.type = type;
         this.packageName = packageName;
         this.samePackage = samePackage;
@@ -122,9 +122,9 @@ public class BeanJsonMapperInfo {
     /**
      * <p>Getter for the field <code>properties</code>.</p>
      *
-     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableMap} object.
+     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.Map} object.
      */
-    public ImmutableMap<String, PropertyInfo> getProperties() {
+    public Map<String, PropertyInfo> getProperties() {
         return properties;
     }
 }

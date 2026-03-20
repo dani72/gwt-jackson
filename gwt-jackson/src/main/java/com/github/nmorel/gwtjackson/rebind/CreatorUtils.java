@@ -32,8 +32,7 @@ import com.google.gwt.core.ext.typeinfo.HasAnnotations;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
+import java.util.Optional;
 
 /**
  * <p>CreatorUtils class.</p>
@@ -54,7 +53,7 @@ public final class CreatorUtils {
      */
     public static <T extends Annotation> Optional<T> findFirstEncounteredAnnotationsOnAllHierarchy( RebindConfiguration configuration,
                                                                                                     JClassType type, Class<T> annotation ) {
-        return findFirstEncounteredAnnotationsOnAllHierarchy( configuration, type, annotation, Optional.<JClassType>absent() );
+        return findFirstEncounteredAnnotationsOnAllHierarchy( configuration, type, annotation, Optional.<JClassType>empty() );
     }
 
     /**
@@ -92,7 +91,7 @@ public final class CreatorUtils {
                 currentType = null;
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -127,7 +126,7 @@ public final class CreatorUtils {
             Class clazz = Class.forName( annotation );
             return getAnnotation( clazz, hasAnnotationsList );
         } catch ( ClassNotFoundException e ) {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
@@ -146,7 +145,7 @@ public final class CreatorUtils {
                 return Optional.of( accessor.getAnnotation( annotation ) );
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -205,13 +204,13 @@ public final class CreatorUtils {
      * @param logger a {@link com.google.gwt.core.ext.TreeLogger} object.
      * @param configuration a {@link com.github.nmorel.gwtjackson.rebind.RebindConfiguration} object.
      * @param type a {@link com.google.gwt.core.ext.typeinfo.JClassType} object.
-     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableList} object.
+     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.List} object.
      */
-    public static ImmutableList<JClassType> filterSubtypesForSerialization( TreeLogger logger, RebindConfiguration configuration,
+    public static List<JClassType> filterSubtypesForSerialization( TreeLogger logger, RebindConfiguration configuration,
                                                                             JClassType type ) {
         boolean filterOnlySupportedType = isObjectOrSerializable( type );
 
-        ImmutableList.Builder<JClassType> builder = ImmutableList.builder();
+        ArrayList<JClassType> builder = new ArrayList<>();
         if ( type.getSubtypes().length > 0 ) {
             for ( JClassType subtype : type.getSubtypes() ) {
                 if ( null == subtype.isAnnotation()
@@ -222,7 +221,7 @@ public final class CreatorUtils {
                 }
             }
         }
-        return builder.build();
+        return builder;
     }
 
     /**
@@ -231,13 +230,13 @@ public final class CreatorUtils {
      * @param logger a {@link com.google.gwt.core.ext.TreeLogger} object.
      * @param configuration a {@link com.github.nmorel.gwtjackson.rebind.RebindConfiguration} object.
      * @param type a {@link com.google.gwt.core.ext.typeinfo.JClassType} object.
-     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableList} object.
+     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.List} object.
      */
-    public static ImmutableList<JClassType> filterSubtypesForDeserialization( TreeLogger logger, RebindConfiguration configuration,
+    public static List<JClassType> filterSubtypesForDeserialization( TreeLogger logger, RebindConfiguration configuration,
                                                                               JClassType type ) {
         boolean filterOnlySupportedType = isObjectOrSerializable( type );
 
-        ImmutableList.Builder<JClassType> builder = ImmutableList.builder();
+        ArrayList<JClassType> builder = new ArrayList<>();
         if ( type.getSubtypes().length > 0 ) {
             for ( JClassType subtype : type.getSubtypes() ) {
                 if ( (null == subtype.isInterface() && !subtype.isAbstract() && (!subtype.isMemberType() || subtype.isStatic()))
@@ -253,7 +252,7 @@ public final class CreatorUtils {
                 }
             }
         }
-        return builder.build();
+        return builder;
     }
 
     /**
@@ -286,7 +285,7 @@ public final class CreatorUtils {
             return null;
         }
 
-        List<JMapperType> subLevel = new ArrayList<JMapperType>();
+        List<JMapperType> subLevel = new ArrayList<>();
         for ( JMapperType mapperType : mapperTypeList ) {
             if ( mapperType.isBeanMapper() ) {
                 return mapperType.getType().isClass();

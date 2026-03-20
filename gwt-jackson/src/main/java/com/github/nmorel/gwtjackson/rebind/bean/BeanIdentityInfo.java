@@ -18,7 +18,7 @@ package com.github.nmorel.gwtjackson.rebind.bean;
 
 import com.fasterxml.jackson.annotation.ObjectIdGenerator;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
+import java.util.Optional;
 
 /**
  * <p>BeanIdentityInfo class.</p>
@@ -46,7 +46,7 @@ public final class BeanIdentityInfo {
         this.generator = generator;
         this.scope = scope;
         this.idABeanProperty = true;
-        this.type = Optional.absent();
+        this.type = Optional.empty();
     }
 
     BeanIdentityInfo( String propertyName, boolean alwaysAsId, Class<? extends ObjectIdGenerator<?>> generator, Class<?> scope,

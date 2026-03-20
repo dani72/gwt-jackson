@@ -16,8 +16,9 @@
 
 package com.github.nmorel.gwtjackson.rebind.type;
 
+import java.util.List;
+
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -36,7 +37,7 @@ public abstract class JMapperType {
 
         protected CodeBlock instance;
 
-        protected ImmutableList<M> parameters;
+        protected List<M> parameters;
 
         public B beanMapper( boolean beanMapper ) {
             this.beanMapper = beanMapper;
@@ -53,7 +54,7 @@ public abstract class JMapperType {
             return (B) this;
         }
 
-        public B parameters( ImmutableList<M> parameters ) {
+        public B parameters( List<M> parameters ) {
             this.parameters = parameters;
             return (B) this;
         }
@@ -65,7 +66,7 @@ public abstract class JMapperType {
 
     protected final CodeBlock instance;
 
-    protected final ImmutableList<? extends JMapperType> parameters;
+    protected final List<? extends JMapperType> parameters;
 
     /**
      * <p>Constructor for JMapperType.</p>
@@ -73,9 +74,9 @@ public abstract class JMapperType {
      * @param beanMapper a boolean.
      * @param type a {@link com.google.gwt.core.ext.typeinfo.JType} object.
      * @param instance a {@link com.squareup.javapoet.CodeBlock} object.
-     * @param parameters a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableList} object.
+     * @param parameters a {@link com.google.gwt.thirdparty.guava.common.collect.List} object.
      */
-    protected JMapperType( boolean beanMapper, JType type, CodeBlock instance, ImmutableList<? extends JMapperType> parameters ) {
+    protected JMapperType( boolean beanMapper, JType type, CodeBlock instance, List<? extends JMapperType> parameters ) {
         this.beanMapper = beanMapper;
         this.type = type;
         this.instance = instance;
@@ -112,9 +113,9 @@ public abstract class JMapperType {
     /**
      * <p>Getter for the field <code>parameters</code>.</p>
      *
-     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableList} object.
+     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.List} object.
      */
-    public final ImmutableList<? extends JMapperType> getParameters() {
+    public final List<? extends JMapperType> getParameters() {
         return parameters;
     }
 }

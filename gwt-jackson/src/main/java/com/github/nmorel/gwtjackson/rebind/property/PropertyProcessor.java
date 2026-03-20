@@ -56,11 +56,8 @@ import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.dev.util.collect.Lists;
-import com.google.gwt.thirdparty.guava.common.base.Function;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
-import com.google.gwt.thirdparty.guava.common.collect.Ordering;
+import java.util.Comparator;
+import java.util.Optional;
 
 import static com.github.nmorel.gwtjackson.rebind.CreatorUtils.findFirstEncounteredAnnotationsOnAllHierarchy;
 
@@ -91,7 +88,7 @@ public final class PropertyProcessor {
             typeOracle, BeanInfo beanInfo, boolean mapperInSamePackageAsType ) throws UnableToCompleteException {
 
         // we first parse the bean to retrieve all the properties
-        ImmutableMap<String, PropertyAccessors> fieldsMap = PropertyParser.findPropertyAccessors( configuration, logger, beanInfo );
+        Map<String, PropertyAccessors> fieldsMap = PropertyParser.findPropertyAccessors( configuration, logger, beanInfo );
 
         // value, any getter and any setter properties
         PropertyInfo valuePropertyInfo = null;
@@ -99,7 +96,7 @@ public final class PropertyProcessor {
         PropertyInfo anySetterPropertyInfo = null;
 
         // Processing all the properties accessible via field, getter or setter
-        Map<String, PropertyInfo> propertiesMap = new LinkedHashMap<String, PropertyInfo>();
+        Map<String, PropertyInfo> propertiesMap = new LinkedHashMap<>();
         for ( PropertyAccessors propertyAccessors : fieldsMap.values() ) {
 
             Optional<PropertyInfo> propertyInfoOptional = processProperty( configuration, logger, typeOracle, propertyAccessors,
@@ -151,7 +148,7 @@ public final class PropertyProcessor {
             }
         }
 
-        ImmutableMap.Builder<String, PropertyInfo> result = ImmutableMap.builder();
+        LinkedHashMap<String, PropertyInfo> result = new LinkedHashMap<>();
 
         // we first add the properties defined in order
         for ( String orderedProperty : beanInfo.getPropertyOrderList() ) {
@@ -165,15 +162,10 @@ public final class PropertyProcessor {
         // if the user asked for an alphabetic order, we sort the rest of the properties
         if ( beanInfo.isPropertyOrderAlphabetic() ) {
 
-            List<Entry<String, PropertyInfo>> entries = new ArrayList<Entry<String, PropertyInfo>>( propertiesMap.entrySet() );
+            List<Entry<String, PropertyInfo>> entries = new ArrayList<>( propertiesMap.entrySet() );
 
             // sorting entries alphabetically on their key
-            Lists.sort( entries, Ordering.natural().onResultOf( new Function<Entry<String, PropertyInfo>, String>() {
-                @Override
-                public String apply( Entry<String, PropertyInfo> entry ) {
-                    return null == entry ? null : entry.getKey();
-                }
-            } ) );
+            entries.sort( Comparator.comparing( entry -> entry == null ? null : entry.getKey(), Comparator.nullsLast( Comparator.naturalOrder() ) ) );
 
             for ( Map.Entry<String, PropertyInfo> entry : entries ) {
                 result.put( entry.getKey(), entry.getValue() );
@@ -187,8 +179,8 @@ public final class PropertyProcessor {
             }
         }
 
-        return new PropertiesContainer( result.build(), Optional.fromNullable( valuePropertyInfo ), Optional
-                .fromNullable( anyGetterPropertyInfo ), Optional.fromNullable( anySetterPropertyInfo ) );
+        return new PropertiesContainer( result, Optional.ofNullable( valuePropertyInfo ), Optional
+                .ofNullable( anyGetterPropertyInfo ), Optional.ofNullable( anySetterPropertyInfo ) );
     }
 
     private static Optional<PropertyInfo> processProperty( RebindConfiguration configuration, TreeLogger logger, JacksonTypeOracle
@@ -200,7 +192,7 @@ public final class PropertyProcessor {
 
         if ( !getterAutoDetected && !setterAutoDetected && !fieldAutoDetected && !propertyAccessors.getParameter().isPresent() ) {
             // none of the field have been auto-detected, we ignore the field
-            return Optional.absent();
+            return Optional.empty();
         }
 
         final String propertyName = propertyAccessors.getPropertyName();
@@ -217,11 +209,11 @@ public final class PropertyProcessor {
         builder.setRequired( jsonProperty.isPresent() && jsonProperty.get().required() );
 
         Optional<JsonManagedReference> jsonManagedReference = propertyAccessors.getAnnotation( JsonManagedReference.class );
-        builder.setManagedReference( Optional.fromNullable( jsonManagedReference.isPresent() ? jsonManagedReference.get()
+        builder.setManagedReference( Optional.ofNullable( jsonManagedReference.isPresent() ? jsonManagedReference.get()
                 .value() : null ) );
 
         Optional<JsonBackReference> jsonBackReference = propertyAccessors.getAnnotation( JsonBackReference.class );
-        builder.setBackReference( Optional.fromNullable( jsonBackReference.isPresent() ? jsonBackReference.get().value() : null ) );
+        builder.setBackReference( Optional.ofNullable( jsonBackReference.isPresent() ? jsonBackReference.get().value() : null ) );
 
         if ( !builder.getBackReference().isPresent() ) {
             determineGetter( propertyAccessors, samePackage, getterAutoDetected, fieldAutoDetected, builder );
@@ -372,21 +364,14 @@ public final class PropertyProcessor {
 
     private static boolean isAutoDetected( JsonAutoDetect.Visibility visibility, boolean isPrivate, boolean isProtected, boolean
             isPublic, boolean isDefaultAccess ) {
-        switch ( visibility ) {
-            case ANY:
-                return true;
-            case NONE:
-                return false;
-            case NON_PRIVATE:
-                return !isPrivate;
-            case PROTECTED_AND_PUBLIC:
-                return isProtected || isPublic;
-            case PUBLIC_ONLY:
-            case DEFAULT:
-                return isPublic;
-            default:
-                return false;
-        }
+        return switch ( visibility ) {
+            case ANY -> true;
+            case NONE -> false;
+            case NON_PRIVATE -> !isPrivate;
+            case PROTECTED_AND_PUBLIC -> isProtected || isPublic;
+            case PUBLIC_ONLY, DEFAULT -> isPublic;
+            default -> false;
+        };
     }
 
     private static JType findType( TreeLogger logger, PropertyAccessors fieldAccessors, JacksonTypeOracle typeOracle,
@@ -520,7 +505,7 @@ public final class PropertyProcessor {
 
         JClassType classType = type.isClassOrInterface();
         if ( null == classType ) {
-            return Optional.absent();
+            return Optional.empty();
         } else if ( typeOracle.isIterable( classType ) ) {
             if ( (null == classType.isParameterized() || classType.isParameterized().getTypeArgs().length != 1) && (null == classType
                     .isGenericType() || classType.isGenericType().getTypeParameters().length != 1) ) {

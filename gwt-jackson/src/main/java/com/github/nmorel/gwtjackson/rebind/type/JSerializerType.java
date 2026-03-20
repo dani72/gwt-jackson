@@ -16,9 +16,10 @@
 
 package com.github.nmorel.gwtjackson.rebind.type;
 
+import java.util.List;
+import java.util.Objects;
+
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.thirdparty.guava.common.base.Preconditions;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
 import com.squareup.javapoet.CodeBlock;
 
 /**
@@ -32,16 +33,16 @@ public final class JSerializerType extends JMapperType {
     public static final class Builder extends JMapperType.Builder<Builder, JSerializerType> {
 
         public JSerializerType build() {
-            Preconditions.checkNotNull( instance, "instance is mandatory" );
-            Preconditions.checkNotNull( type, "type is mandatory" );
+            Objects.requireNonNull( instance, "instance is mandatory" );
+            Objects.requireNonNull( type, "type is mandatory" );
             if ( null == parameters ) {
-                parameters = ImmutableList.of();
+                parameters = List.of();
             }
             return new JSerializerType( beanMapper, type, instance, parameters );
         }
     }
 
-    private JSerializerType( boolean beanMapper, JType type, CodeBlock instance, ImmutableList<JSerializerType> parameters ) {
+    private JSerializerType( boolean beanMapper, JType type, CodeBlock instance, List<JSerializerType> parameters ) {
         super( beanMapper, type, instance, parameters );
     }
 }

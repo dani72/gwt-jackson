@@ -18,6 +18,8 @@ package com.github.nmorel.gwtjackson.rebind;
 
 import javax.lang.model.element.Modifier;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -44,10 +46,7 @@ import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JTypeParameter;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.base.Strings;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
+import java.util.Optional;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -74,7 +73,7 @@ public abstract class AbstractBeanJsonCreator extends AbstractCreator {
 
     protected final BeanInfo beanInfo;
 
-    protected final ImmutableMap<String, PropertyInfo> properties;
+    protected final Map<String, PropertyInfo> properties;
 
     /**
      * <p>Constructor for AbstractBeanJsonCreator.</p>
@@ -254,7 +253,7 @@ public abstract class AbstractBeanJsonCreator extends AbstractCreator {
     protected final CodeBlock generateTypeInfo( BeanTypeInfo typeInfo ) {
 
         Class type;
-        ImmutableMap<JClassType, String> mapTypeToMetadata;
+        Map<JClassType, String> mapTypeToMetadata;
         if ( isSerializer() ) {
             type = TypeSerializationInfo.class;
             mapTypeToMetadata = typeInfo.getMapTypeToSerializationMetadata();
@@ -285,13 +284,13 @@ public abstract class AbstractBeanJsonCreator extends AbstractCreator {
         if ( property.getFormat().isPresent() ) {
             JsonFormat format = property.getFormat().get();
 
-            if ( !Strings.isNullOrEmpty( format.pattern() ) ) {
+            if ( format.pattern() != null && !format.pattern().isEmpty() ) {
                 paramBuilder.add( "\n.setPattern($S)", format.pattern() );
             }
 
             paramBuilder.add( "\n.setShape($T.$L)", Shape.class, format.shape().name() );
 
-            if ( !Strings.isNullOrEmpty( format.locale() ) && !JsonFormat.DEFAULT_LOCALE.equals( format.locale() ) ) {
+            if ( format.locale() != null && !format.locale().isEmpty() && !JsonFormat.DEFAULT_LOCALE.equals( format.locale() ) ) {
                 logger.log( Type.WARN, "JsonFormat.locale is not supported by default" );
                 paramBuilder.add( "\n.setLocale($S)", format.locale() );
             }
@@ -309,7 +308,7 @@ public abstract class AbstractBeanJsonCreator extends AbstractCreator {
      *
      * @return the filtered subtypes of the mapped type
      */
-    protected final ImmutableList<JClassType> filterSubtypes() {
+    protected final List<JClassType> filterSubtypes() {
         if ( isSerializer() ) {
             return CreatorUtils.filterSubtypesForSerialization( logger, configuration, beanInfo.getType() );
         } else {

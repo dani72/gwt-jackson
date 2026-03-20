@@ -65,12 +65,8 @@ import com.google.gwt.core.ext.typeinfo.JAbstractMethod;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.thirdparty.guava.common.base.Function;
-import com.google.gwt.thirdparty.guava.common.base.Joiner;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.collect.Collections2;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -148,7 +144,7 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
             typeBuilder.addMethod( buildInitTypeInfoMethod( beanInfo.getTypeInfo().get() ) );
         }
 
-        ImmutableList<JClassType> subtypes = filterSubtypes();
+        List<JClassType> subtypes = filterSubtypes();
         if ( !subtypes.isEmpty() ) {
             typeBuilder.addMethod( buildInitMapSubtypeClassToDeserializerMethod( subtypes ) );
         }
@@ -295,9 +291,9 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
     private void buildNewInstanceMethodForConstructorOrFactoryMethod( MethodSpec.Builder newInstanceMethodBuilder,
                                                                       MethodSpec createMethod ) {
         // we don't use directly the property name to name our variable in case it contains invalid character
-        ImmutableMap.Builder<String, String> propertyNameToVariableBuilder = ImmutableMap.builder();
+        LinkedHashMap<String, String> propertyNameToVariableBuilder = new LinkedHashMap<>();
 
-        List<String> requiredProperties = new ArrayList<String>();
+        List<String> requiredProperties = new ArrayList<>();
         int propertyIndex = 0;
         for ( String name : beanInfo.getCreatorParameters().keySet() ) {
             String variableName = String.format( INSTANCE_BUILDER_VARIABLE_FORMAT, propertyIndex++ );
@@ -312,18 +308,14 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
             }
         }
         newInstanceMethodBuilder.addCode( "\n" );
-        ImmutableMap<String, String> propertyNameToVariable = propertyNameToVariableBuilder.build();
+        Map<String, String> propertyNameToVariable = propertyNameToVariableBuilder;
 
         newInstanceMethodBuilder.addStatement( "int nbParamToFind = $L", beanInfo.getCreatorParameters().size() );
 
         if ( !requiredProperties.isEmpty() ) {
             CodeBlock code = CodeBlock.builder()
-                    .add( Joiner.on( ", " ).join( Collections2.transform( requiredProperties, new Function<String, Object>() {
-                        @Override
-                        public Object apply( String s ) {
-                            return "$S";
-                        }
-                    } ) ), requiredProperties.toArray() ).build();
+                    .add( requiredProperties.stream().map( s -> "$S" ).collect( Collectors.joining( ", " ) ),
+                            requiredProperties.toArray() ).build();
 
             newInstanceMethodBuilder.addStatement( "$T requiredProperties = new $T($T.asList($L))",
                     ParameterizedTypeName.get( Set.class, String.class ),
@@ -423,7 +415,7 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
         newInstanceMethodBuilder.addStatement( "return new $T($N($L), bufferedProperties)",
                 parameterizedName( Instance.class, beanInfo.getType() ),
                 createMethod,
-                Joiner.on( ", " ).join( propertyNameToVariable.values() ) );
+                String.join( ", ", propertyNameToVariable.values() ) );
     }
 
     /**
@@ -483,10 +475,10 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
 
     private void buildInitPropertiesMethods( TypeSpec.Builder typeBuilder ) throws UnableToCompleteException {
 
-        List<PropertyInfo> ignoredProperties = new ArrayList<PropertyInfo>();
-        List<PropertyInfo> requiredProperties = new ArrayList<PropertyInfo>();
-        Map<PropertyInfo, JDeserializerType> deserializerProperties = new LinkedHashMap<PropertyInfo, JDeserializerType>();
-        List<PropertyInfo> backReferenceProperties = new ArrayList<PropertyInfo>();
+        List<PropertyInfo> ignoredProperties = new ArrayList<>();
+        List<PropertyInfo> requiredProperties = new ArrayList<>();
+        Map<PropertyInfo, JDeserializerType> deserializerProperties = new LinkedHashMap<>();
+        List<PropertyInfo> backReferenceProperties = new ArrayList<>();
 
         for ( PropertyInfo property : properties.values() ) {
             if ( null != beanInfo.getCreatorParameters() && beanInfo.getCreatorParameters().containsKey( property.getPropertyName() ) ) {
@@ -556,7 +548,7 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
         } catch ( UnsupportedTypeException e ) {
             logger.log( Type.WARN, "Method '" + fieldAccessor.getMethod().get()
                     .getName() + "' annotated with @JsonAnySetter has an unsupported type" );
-            return Optional.absent();
+            return Optional.empty();
         }
 
         return Optional.of( MethodSpec.methodBuilder( "initAnySetterDeserializer" )
@@ -649,7 +641,7 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
 
     private List<MethodSpec> buildCommonPropertyDeserializerMethods( PropertyInfo property, JDeserializerType deserializerType )
             throws UnableToCompleteException {
-        List<MethodSpec> result = new ArrayList<MethodSpec>();
+        List<MethodSpec> result = new ArrayList<>();
 
         result.add( MethodSpec.methodBuilder( "newDeserializer" )
                 .addModifiers( Modifier.PROTECTED )
@@ -675,7 +667,7 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
                 && !property.getIdentityInfo().isPresent()
                 && !property.getTypeInfo().isPresent() ) {
             // none of the parameter are set so we don't generate the method
-            return Optional.absent();
+            return Optional.empty();
         }
 
         JClassType annotatedType = findFirstTypeToApplyPropertyAnnotation( deserializerType );
@@ -846,7 +838,7 @@ public class BeanJsonDeserializerCreator extends AbstractBeanJsonCreator {
                 .build();
     }
 
-    private MethodSpec buildInitMapSubtypeClassToDeserializerMethod( ImmutableList<JClassType> subtypes )
+    private MethodSpec buildInitMapSubtypeClassToDeserializerMethod( List<JClassType> subtypes )
             throws UnableToCompleteException {
 
         Class[] mapTypes = new Class[]{Class.class, SubtypeDeserializer.class};

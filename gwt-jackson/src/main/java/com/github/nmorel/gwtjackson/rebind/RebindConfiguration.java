@@ -45,10 +45,9 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracleException;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableSet;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableSet.Builder;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import com.google.gwt.util.regexfilter.RegexFilter;
 import com.google.gwt.util.tools.shared.Md5Utils;
 
@@ -159,15 +158,15 @@ public final class RebindConfiguration {
 
     private final JacksonTypeOracle typeOracle;
 
-    private final Map<String, MapperInstance> serializers = new HashMap<String, MapperInstance>();
+    private final Map<String, MapperInstance> serializers = new HashMap<>();
 
-    private final Map<String, MapperInstance> deserializers = new HashMap<String, MapperInstance>();
+    private final Map<String, MapperInstance> deserializers = new HashMap<>();
 
-    private final Map<String, MapperInstance> keySerializers = new HashMap<String, MapperInstance>();
+    private final Map<String, MapperInstance> keySerializers = new HashMap<>();
 
-    private final Map<String, MapperInstance> keyDeserializers = new HashMap<String, MapperInstance>();
+    private final Map<String, MapperInstance> keyDeserializers = new HashMap<>();
 
-    private final Map<String, JClassType> mixInAnnotations = new HashMap<String, JClassType>();
+    private final Map<String, JClassType> mixInAnnotations = new HashMap<>();
 
     private final JClassType rootMapperClass;
 
@@ -175,11 +174,11 @@ public final class RebindConfiguration {
 
     // If the user adds an annotation on mapper, we have to make distinct serializer/deserializer for the impacted types.
     // For now, it means any types and associated subtypes targeted by a mix-in annotation
-    private final Set<JClassType> specificTypes = new HashSet<JClassType>();
+    private final Set<JClassType> specificTypes = new HashSet<>();
 
-    private final ImmutableSet<JClassType> allSupportedSerializationClass;
+    private final Set<JClassType> allSupportedSerializationClass;
 
-    private final ImmutableSet<JClassType> allSupportedDeserializationClass;
+    private final Set<JClassType> allSupportedDeserializationClass;
 
     private final TypeFilter additionalSupportedTypes;
 
@@ -213,9 +212,9 @@ public final class RebindConfiguration {
 
         List<AbstractConfiguration> configurations = getAllConfigurations();
 
-        Builder<JClassType> allSupportedSerializationClassBuilder = ImmutableSet.builder();
-        Builder<JClassType> allSupportedDeserializationClassBuilder = ImmutableSet.builder();
-        List<String> whitelist = new ArrayList<String>();
+        Set<JClassType> allSupportedSerializationClassBuilder = new LinkedHashSet<>();
+        Set<JClassType> allSupportedDeserializationClassBuilder = new LinkedHashSet<>();
+        List<String> whitelist = new ArrayList<>();
 
         JsonAutoDetect.Visibility fieldVisibility = JsonAutoDetect.Visibility.DEFAULT;
         JsonAutoDetect.Visibility getterVisibility = JsonAutoDetect.Visibility.DEFAULT;
@@ -237,8 +236,8 @@ public final class RebindConfiguration {
             creatorVisibility = configuration.getCreatorVisibility();
         }
 
-        this.allSupportedSerializationClass = allSupportedSerializationClassBuilder.build();
-        this.allSupportedDeserializationClass = allSupportedDeserializationClassBuilder.build();
+        this.allSupportedSerializationClass = Collections.unmodifiableSet( allSupportedSerializationClassBuilder );
+        this.allSupportedDeserializationClass = Collections.unmodifiableSet( allSupportedDeserializationClassBuilder );
         this.additionalSupportedTypes = new TypeFilter( logger, whitelist );
 
         this.defaultFieldVisibility = fieldVisibility;
@@ -252,7 +251,7 @@ public final class RebindConfiguration {
      * @return the list of default configuration + user configurations
      */
     private List<AbstractConfiguration> getAllConfigurations() throws UnableToCompleteException {
-        ImmutableList.Builder<AbstractConfiguration> builder = ImmutableList.builder();
+        List<AbstractConfiguration> builder = new ArrayList<>();
         builder.add( new DefaultConfiguration() );
 
         ConfigurationProperty property = null;
@@ -273,7 +272,7 @@ public final class RebindConfiguration {
             }
         }
 
-        return builder.build();
+        return Collections.unmodifiableList( builder );
     }
 
     /**
@@ -284,8 +283,8 @@ public final class RebindConfiguration {
      * @param allSupportedSerializationClassBuilder builder aggregating all the types that have a serializer
      * @param allSupportedDeserializationClassBuilder builder aggregating all the types that have a deserializer
      */
-    private void addMappers( final AbstractConfiguration configuration, final MapperType mapperType, Builder<JClassType>
-            allSupportedSerializationClassBuilder, Builder<JClassType> allSupportedDeserializationClassBuilder ) throws
+    private void addMappers( final AbstractConfiguration configuration, final MapperType mapperType, Set<JClassType>
+            allSupportedSerializationClassBuilder, Set<JClassType> allSupportedDeserializationClassBuilder ) throws
             UnableToCompleteException {
         Map<Class, Class> configuredMapper = mapperType.getMapperTypeConfiguration( configuration );
 
@@ -531,7 +530,7 @@ public final class RebindConfiguration {
      * @return a {@link com.google.gwt.thirdparty.guava.common.base.Optional} object.
      */
     public Optional<MapperInstance> getSerializer( JType type ) {
-        return Optional.fromNullable( serializers.get( type.getQualifiedSourceName() ) );
+        return Optional.ofNullable( serializers.get( type.getQualifiedSourceName() ) );
     }
 
     /**
@@ -541,7 +540,7 @@ public final class RebindConfiguration {
      * @return a {@link com.google.gwt.thirdparty.guava.common.base.Optional} object.
      */
     public Optional<MapperInstance> getDeserializer( JType type ) {
-        return Optional.fromNullable( deserializers.get( type.getQualifiedSourceName() ) );
+        return Optional.ofNullable( deserializers.get( type.getQualifiedSourceName() ) );
     }
 
     /**
@@ -551,7 +550,7 @@ public final class RebindConfiguration {
      * @return a {@link com.google.gwt.thirdparty.guava.common.base.Optional} object.
      */
     public Optional<MapperInstance> getKeySerializer( JType type ) {
-        return Optional.fromNullable( keySerializers.get( type.getQualifiedSourceName() ) );
+        return Optional.ofNullable( keySerializers.get( type.getQualifiedSourceName() ) );
     }
 
     /**
@@ -561,7 +560,7 @@ public final class RebindConfiguration {
      * @return a {@link com.google.gwt.thirdparty.guava.common.base.Optional} object.
      */
     public Optional<MapperInstance> getKeyDeserializer( JType type ) {
-        return Optional.fromNullable( keyDeserializers.get( type.getQualifiedSourceName() ) );
+        return Optional.ofNullable( keyDeserializers.get( type.getQualifiedSourceName() ) );
     }
 
     /**
@@ -571,7 +570,7 @@ public final class RebindConfiguration {
      * @return a {@link com.google.gwt.thirdparty.guava.common.base.Optional} object.
      */
     public Optional<JClassType> getMixInAnnotations( JType type ) {
-        return Optional.fromNullable( mixInAnnotations.get( type.getQualifiedSourceName() ) );
+        return Optional.ofNullable( mixInAnnotations.get( type.getQualifiedSourceName() ) );
     }
 
     /**

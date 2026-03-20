@@ -35,8 +35,7 @@ import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.base.Strings;
+import java.util.Optional;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -78,7 +77,7 @@ public class ObjectMapperCreator extends AbstractCreator {
     /** {@inheritDoc} */
     @Override
     protected Optional<BeanJsonMapperInfo> getMapperInfo() {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -209,7 +208,7 @@ public class ObjectMapperCreator extends AbstractCreator {
         Optional<JsonRootName> jsonRootName
                 = findFirstEncounteredAnnotationsOnAllHierarchy( configuration, mappedTypeClass, JsonRootName.class );
         String rootName;
-        if ( !jsonRootName.isPresent() || Strings.isNullOrEmpty( jsonRootName.get().value() ) ) {
+        if ( !jsonRootName.isPresent() || jsonRootName.get().value() == null || jsonRootName.get().value().isEmpty() ) {
             rootName = mappedTypeClass.getSimpleSourceName();
         } else {
             rootName = jsonRootName.get().value();

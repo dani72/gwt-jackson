@@ -16,8 +16,8 @@
 
 package com.github.nmorel.gwtjackson.rebind.property;
 
-import com.google.gwt.thirdparty.guava.common.base.Optional;
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
+import java.util.Optional;
+import java.util.Map;
 
 /**
  * <p>PropertiesContainer class.</p>
@@ -27,7 +27,7 @@ import com.google.gwt.thirdparty.guava.common.collect.ImmutableMap;
  */
 public class PropertiesContainer {
 
-    private final ImmutableMap<String, PropertyInfo> properties;
+    private final Map<String, PropertyInfo> properties;
 
     private final Optional<PropertyInfo> valuePropertyInfo;
 
@@ -38,12 +38,12 @@ public class PropertiesContainer {
     /**
      * <p>Constructor for PropertiesContainer.</p>
      *
-     * @param properties a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableMap} object.
+     * @param properties a {@link com.google.gwt.thirdparty.guava.common.collect.Map} object.
      * @param valuePropertyInfo a {@link com.google.gwt.thirdparty.guava.common.base.Optional} object.
      * @param anyGetterPropertyInfo a {@link com.google.gwt.thirdparty.guava.common.base.Optional} object.
      * @param anySetterPropertyInfo a {@link com.google.gwt.thirdparty.guava.common.base.Optional} object.
      */
-    public PropertiesContainer( ImmutableMap<String, PropertyInfo> properties, Optional<PropertyInfo> valuePropertyInfo,
+    public PropertiesContainer( Map<String, PropertyInfo> properties, Optional<PropertyInfo> valuePropertyInfo,
                                 Optional<PropertyInfo> anyGetterPropertyInfo, Optional<PropertyInfo> anySetterPropertyInfo ) {
         this.properties = properties;
         this.valuePropertyInfo = valuePropertyInfo;
@@ -54,9 +54,9 @@ public class PropertiesContainer {
     /**
      * <p>Getter for the field <code>properties</code>.</p>
      *
-     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.ImmutableMap} object.
+     * @return a {@link com.google.gwt.thirdparty.guava.common.collect.Map} object.
      */
-    public ImmutableMap<String, PropertyInfo> getProperties() {
+    public Map<String, PropertyInfo> getProperties() {
         return properties;
     }
 
